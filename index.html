@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+
+    <meta charset="utf-8"/>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <title>OSS 2036 // KINETIC FRAMEWORK</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+
+
+    <script id="tailwind-config">
+
+        tailwind.config = {
+
+            darkMode: "class",
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        "primary": "#3c00ff",
+
+                        "accent": "#ccff00",
+
+                        "background-dark": "#050505",
+
+                    },
+
+                    fontFamily: {
+
+                        "display": ["Inter", "sans-serif"],
+
+                        "mono": ["JetBrains Mono", "monospace"],
+
+                    }
+
+                },
+
+            },
+
+        }
+
+    </script>
+
+    <style type="text/tailwindcss">
+
+        @layer base {
+
+            body {
+
+                @apply bg-background-dark text-white font-display overflow-x-hidden;
+
+                /* We DO NOT hide vertical overflow on body, ScrollTrigger needs it */
+
+            }
+
+        }
+
+        
+
+        .text-stroke-primary {
+
+            -webkit-text-stroke: 1px #3c00ff;
+
+            color: transparent;
+
+        }
+
+
+
+        /* The Fixed HUD layers - z-index 50 ensures they stay above the scrolling scenes */
+
+        .hud-top { @apply fixed top-0 left-0 w-full h-10 border-b border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
+
+        .hud-bottom { @apply fixed bottom-0 left-0 w-full h-10 border-t border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
+
+        .hud-left { @apply fixed top-10 left-0 w-14 h-[calc(100vh-80px)] border-r border-primary/40 bg-black/80 z-50 flex flex-col items-center justify-center; }
+
+        
+
+        /* Master container that gets pinned */
+
+        #viewport-container {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 100vh;
+
+            /* Padding accommodates the fixed HUD */
+
+            padding-top: 40px; 
+
+            padding-bottom: 40px;
+
+            padding-left: 56px;
+
+            background-color: #000;
+
+            overflow: hidden;
+
+        }
+
+
+
+        /* The individual scenes that stack on top of each other */
+
+        .scene {
+
+            position: absolute;
+
+            top: 40px;
+
+            left: 56px;
+
+            width: calc(100% - 56px);
+
+            height: calc(100vh - 80px);
+
+            background-color: #050505;
+
+            /* Will be manipulated by GSAP */
+
+            will-change: transform; 
+
+            overflow: hidden;
+
+        }
+
+
+
+        /* Initial stacking order: Scene 1 is visible, others are pushed down */
+
+        #scene-01 { z-index: 10; }
+
+        #scene-02 { z-index: 20; transform: translateY(100%); }
+
+        #scene-03 { z-index: 30; transform: translateY(100%); }
+
+        #scene-04 { z-index: 40; transform: translateY(100%); }
+
+        #scene-05 { z-index: 50; transform: translateY(100%); }
+
+        #scene-06 { z-index: 60; transform: translateY(100%); }
+
+
+
+        /* Structural Panel Borders for the interior designs */
+
+        .interior-panel { @apply border border-primary/30 relative flex flex-col bg-black; }
+
+        .interior-header { @apply px-3 py-1.5 border-b border-primary/30 flex justify-between items-center bg-primary/5 font-mono text-[9px] text-gray-400 uppercase tracking-widest; }
+
+        /* Vertex Header Letter Animation — desktop */
+        .vertex-letter, #vertex-suffix {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: min(7vw, 110px);
+            font-weight: 700;
+            color: #ccff00;
+            line-height: 1;
+            will-change: transform;
+        }
+        /* Vertex Mobile — two-line stacked layout */
+        .vertex-mobile-line {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem; /* text-5xl */
+            font-weight: 700;
+            color: #ccff00;
+            line-height: 1.15;
+            text-align: center;
+            will-change: transform, opacity;
+        }
+
+        /* ========== MOBILE RESPONSIVE ========== */
+        @media (max-width: 767px) {
+            /* Hide the left sidebar HUD on mobile */
+            .hud-left {
+                display: none !important;
+            }
+            /* Shrink HUD bars to h-6 (24px) for minimal intrusion */
+            .hud-top, .hud-bottom {
+                height: 1.5rem !important;
+            }
+            /* Adjust viewport padding for smaller HUDs + no sidebar */
+            #viewport-container {
+                padding-left: 0 !important;
+                padding-top: 24px !important;
+                padding-bottom: 24px !important;
+            }
+            /* Scenes: full width, adjusted for 24px HUDs */
+            .scene {
+                left: 0 !important;
+                width: 100% !important;
+                top: 24px !important;
+                height: calc(100vh - 48px) !important;
+            }
+            /* Scene 01: mobile-native centered layout with ZERO gap */
+            #scene-01 {
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 0 !important;
+                padding: 0 !important;
+            }
+            /* Scene 01: remove all flex/height constraints, hide interior borders */
+            #scene-01 > * {
+                flex: none !important;
+                height: auto !important;
+            }
+            #scene-01 .interior-panel {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            /* Scene 02 horizontal track: each panel full-viewport-width */
+            #scene-02-track > div {
+                min-width: calc(100vw - 8px);
+                flex-shrink: 0;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <header class="hud-top">
+
+        <div class="flex gap-6 items-center">
+
+            <span class="text-accent flex items-center gap-2">
+
+                <span class="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
+
+                SYS.READY
+
+            </span>
+
+            <span>LAT.01//45.92</span>
+
+        </div>
+
+        <div class="flex gap-6">
+
+            <span>RES: <script>document.write(window.innerWidth + 'x' + window.innerHeight)</script></span>
+
+            <span>OSS_V.2036.1</span>
+
+        </div>
+
+    </header>
+
+
+
+    <aside class="hud-left">
+
+        <div class="-rotate-90 whitespace-nowrap font-mono text-[10px] text-primary font-bold tracking-[0.5em] opacity-80">
+
+            VERTEX INFRASTRUCTURE
+
+        </div>
+
+    </aside>
+
+
+
+    <footer class="hud-bottom">
+
+        <div class="flex gap-4"><span>© 2036 OSS INC.</span></div>
+
+        <div class="text-accent animate-pulse tracking-[0.5em]">DASHBOARD_STABLE</div>
+
+        <div class="flex gap-4 text-right"><span>SECURE CONNECTION</span><span class="text-accent">ENCRYPTED</span></div>
+
+    </footer>
+
+
+
+
+
+    <div id="viewport-container">
+
+        
+
+        <section id="scene-01" class="scene flex flex-col p-1 gap-1 bg-primary/10">
+
+            <div class="flex flex-1 md:h-2/3 gap-1">
+
+                <div class="interior-panel w-full items-center justify-center relative overflow-hidden" style="background:#000;">
+
+                    <div class="absolute top-3 left-3 font-mono text-[10px] text-primary/60 z-20">01_CORE_VISUAL</div>
+
+                    <!-- Desktop: animated single-line version -->
+                    <div id="vertex-header" class="hidden md:flex items-center justify-center w-full relative overflow-hidden" style="z-index:15; height:100%;">
+                        <div style="display:inline-flex; align-items:baseline; white-space:nowrap;">
+                            <span class="vertex-letter">V</span>
+                            <span class="vertex-letter">E</span>
+                            <span class="vertex-letter">R</span>
+                            <span class="vertex-letter">T</span>
+                            <span class="vertex-letter">E</span>
+                            <span class="vertex-letter">X</span>
+                            <span id="suffix-mask" style="display:inline-block; clip-path:inset(0 100% 0 0); overflow:hidden;">
+                                <span id="vertex-suffix">STUDIO.TECH</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Mobile: three-line stacked version -->
+                    <div id="vertex-header-mobile" class="flex md:hidden flex-col items-center justify-center w-full relative overflow-hidden py-2" style="z-index:15;">
+                        <span class="vertex-mobile-line">VERTEX</span>
+                        <span class="vertex-mobile-line">STUDIO</span>
+                        <span class="vertex-mobile-line">.TECH</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="interior-panel flex-1 md:h-1/3 overflow-hidden justify-center items-center relative">
+
+                <div class="relative">
+                    <!-- Wireframe stroke layer -->
+                    <h2 id="headline-physics" class="text-3xl md:text-[7vw] leading-tight md:leading-none font-bold font-display text-stroke-primary opacity-60 tracking-tighter md:whitespace-nowrap px-4 md:translate-y-2 text-center" style="will-change: transform, opacity;">
+                        THE PHYSICS<br class="md:hidden"> OF ATTENTION
+                    </h2>
+                    <!-- Solid fill layer — initially clipped, rises from bottom -->
+                    <h2 id="headline-physics-fill" class="text-3xl md:text-[7vw] leading-tight md:leading-none font-bold font-display tracking-tighter md:whitespace-nowrap px-4 md:translate-y-2 absolute inset-0 text-center" style="color:#3c00ff; clip-path:inset(100% 0 0 0); will-change: transform, opacity;">
+                        THE PHYSICS<br class="md:hidden"> OF ATTENTION
+                    </h2>
+                </div>
+
+                <div class="absolute right-4 bottom-2 font-mono text-[9px] text-accent">WARNING: ATTENTION_DECAY_DETECTED</div>
+
+            </div>
+
+        </section>
+
+
+
+        <section id="scene-02" class="scene bg-primary/10">
+            <div id="scene-02-track" class="flex p-1 gap-1 h-full">
+
+            <div class="interior-panel w-1/3 p-8 justify-center group bg-primary/5 hover:bg-primary/10 transition-colors">
+
+                <div class="absolute top-4 right-4 text-accent font-mono text-xl">+</div>
+
+                <div class="flex items-center gap-2 mb-6">
+
+                    <span class="w-2 h-2 bg-accent rounded-full shadow-[0_0_8px_#ccff00]"></span>
+
+                    <span class="font-mono text-[10px] text-gray-500 uppercase">NODE.01 // SPEED</span>
+
+                </div>
+
+                <h3 class="text-4xl font-bold tracking-tight mb-4 text-white">Velocity</h3>
+
+                <p class="font-mono text-[11px] text-gray-400 leading-relaxed">Rendering at the speed of thought. Zero latency architecture.</p>
+
+            </div>
+
+            
+
+            <div class="interior-panel w-1/3 p-8 justify-center bg-black">
+
+                <div class="absolute top-4 right-4 text-primary font-mono text-xl">⌝</div>
+
+                <div class="flex items-center gap-2 mb-6">
+
+                    <span class="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_#3c00ff]"></span>
+
+                    <span class="font-mono text-[10px] text-gray-500 uppercase">NODE.02 // IMPACT</span>
+
+                </div>
+
+                <h3 class="text-4xl font-bold tracking-tight mb-4 text-white">Resonance</h3>
+
+                <p class="font-mono text-[11px] text-gray-400 leading-relaxed">Visual frequencies that align with user intent.</p>
+
+            </div>
+
+
+
+            <div class="interior-panel w-1/3">
+
+                <div class="interior-header"><span>03_PHYSICS_ENGINE.INIT</span><span class="text-accent">ACTIVE</span></div>
+
+                <div class="flex flex-col h-full divide-y divide-primary/20">
+
+                    <div class="flex-1 flex flex-col items-center justify-center p-4">
+
+                        <div class="w-8 h-8 border border-primary rotate-45 mb-4"></div>
+
+                        <span class="font-mono text-[9px] text-gray-600">OBJ: FLUID_DYNAMICS</span>
+
+                    </div>
+
+                    <div class="flex-1 flex flex-col items-center justify-center p-4">
+
+                        <div class="w-10 h-10 rounded-full border border-accent mb-4"></div>
+
+                        <span class="font-mono text-[9px] text-gray-600">OBJ: LIGHT_REFRACTION</span>
+
+                    </div>
+
+                    <div class="flex-1 flex flex-col items-center justify-center p-4">
+
+                        <div class="w-10 h-10 border-t border-primary rounded-t-full mb-4"></div>
+
+                        <span class="font-mono text-[9px] text-gray-600">OBJ: GRAVITY_WELL</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            </div> <!-- close scene-02-track -->
+        </section>
+
+
+
+        <section id="scene-03" class="scene flex items-center justify-center border border-primary/30">
+
+            <h2 class="font-mono text-2xl text-primary/50">SECTION 03 // PORTFOLIO INIT</h2>
+
+        </section>
+
+
+
+        <section id="scene-04" class="scene flex items-center justify-center border border-accent/30 bg-primary/5">
+
+            <h2 class="font-mono text-2xl text-accent/50">SECTION 04 // PROTOCOL MAP</h2>
+
+        </section>
+
+
+
+        <section id="scene-05" class="scene flex items-center justify-center border border-primary/30">
+
+            <h2 class="font-mono text-2xl text-primary/50">SECTION 05 // SYSTEM SPECS</h2>
+
+        </section>
+
+
+
+        <section id="scene-06" class="scene flex items-center justify-center border border-primary/30 bg-black">
+
+            <div class="text-center flex flex-col items-center">
+
+                <h2 class="font-mono text-[10px] text-gray-500 mb-4">06_CAPITAL_ALLOCATION</h2>
+
+                <div class="text-stroke-white text-7xl font-black mb-8">£5,000</div>
+
+                <button class="px-12 py-4 bg-primary text-black font-black text-xs tracking-widest hover:bg-accent transition-colors">INITIATE PROJECT</button>
+
+            </div>
+
+        </section>
+
+
+
+    </div>
+
+
+
+    <script>
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile detection (used by all animations below)
+        const isMobile = window.innerWidth < 768;
+
+        // ===== PAGE LOAD ANIMATIONS =====
+        (function() {
+            const tl = gsap.timeline({ delay: 0.2 });
+
+            if (!isMobile) {
+                // --- DESKTOP: Letter spread → condense → suffix reveal ---
+                const letters = gsap.utils.toArray('.vertex-letter');
+                const header = document.getElementById('vertex-header');
+                const spreadWidth = header.offsetWidth * 0.8;
+                const count = letters.length;
+
+                letters.forEach((letter, i) => {
+                    const offset = ((i / (count - 1)) - 0.5) * spreadWidth;
+                    gsap.set(letter, { x: offset, opacity: 0 });
+                });
+
+                tl.to(letters, { opacity: 1, duration: 0.01, stagger: 0.02 });
+
+                tl.to(letters, {
+                    x: 0, duration: 1.4, ease: "expo.out",
+                    stagger: { each: 0.04, from: "end" }
+                }, 0.1);
+
+                tl.to('#suffix-mask', {
+                    clipPath: 'inset(0 0% 0 0)',
+                    duration: 1.2, ease: "expo.out"
+                }, "-=0.7");
+
+                // Desktop: headline fade-in (separate, gentler)
+                gsap.from("#headline-physics", {
+                    y: 50, opacity: 0,
+                    duration: 3, ease: "power4.out",
+                    delay: 0.5
+                });
+
+            } else {
+                // --- MOBILE: Three-line cascade + collision entrance ---
+                const mobileLines = gsap.utils.toArray('.vertex-mobile-line');
+                const headline = document.getElementById('headline-physics');
+                const headlineFill = document.getElementById('headline-physics-fill');
+
+                // Set initial positions: all three lines slide from top, headline from bottom
+                gsap.set(mobileLines, { y: -100, opacity: 0 });
+                gsap.set([headline, headlineFill], { y: 100, opacity: 0 });
+
+                // Three-line cascade: VERTEX → STUDIO → .TECH
+                tl.to(mobileLines, {
+                    y: 0, opacity: 1,
+                    duration: 1.2, ease: "expo.out",
+                    stagger: 0.12  // Increased stagger for more dramatic cascade
+                }, 0);
+
+                // Headline slides up simultaneously with the cascade
+                tl.to([headline, headlineFill], {
+                    y: 0, opacity: 1,
+                    duration: 1.2, ease: "expo.out"
+                }, 0);
+            }
+
+            // Liquid fill on headline (desktop + mobile)
+            if (!isMobile) {
+                tl.to('#headline-physics', {
+                    opacity: 1, duration: 0.4, ease: "power2.out"
+                }, "+=0.3");
+            }
+
+            tl.to('#headline-physics-fill', {
+                clipPath: 'inset(0% 0 0 0)',
+                duration: 1.5, ease: "back.out(1.7)"
+            }, isMobile ? "+=0.2" : "-=0.2");
+        })();
+
+        // 1. Array of all our scenes
+
+        const scenes = gsap.utils.toArray('.scene');
+
+        
+
+        // 2. We set the multiplier for how long each scene lasts.
+
+        // 200% = 2 viewports worth of scrolling per scene.
+        // On mobile, add extra scroll distance for Scene 02's horizontal panels.
+
+        const scrollDurationPerScene = 200;
+        const extraScrollForHorizontal = isMobile ? 400 : 0;
+        const totalScrollDistance = (scenes.length) * scrollDurationPerScene + extraScrollForHorizontal;
+
+
+
+        // 3. Create the Master Timeline
+
+        const masterTl = gsap.timeline({
+
+            scrollTrigger: {
+
+                trigger: "#viewport-container",
+
+                start: "top top",
+
+                // The total pinning distance
+
+                end: `+=${totalScrollDistance}%`, 
+
+                pin: true,
+
+                scrub: 2, // Smooth scrubbing taking 2 seconds to catch up to the scrollbar
+
+            }
+
+        });
+
+
+
+        // 4. Construct the Timeline Logic
+
+        scenes.forEach((scene, index) => {
+
+            
+
+            // --- SCENE DWELL / INTERNAL ANIMATIONS ---
+
+            if (index === 0) {
+                // Scene 01: dwell pause (header animation is page-load, not scroll-driven)
+                masterTl.to({}, { duration: 1 });
+
+            } else if (index === 1 && isMobile) {
+                // ===== SCENE 02 MOBILE: HORIZONTAL SCROLL =====
+                const track = document.getElementById('scene-02-track');
+                const scrollDistance = track.scrollWidth - window.innerWidth;
+
+                masterTl.to({}, { duration: 0.5 });
+                masterTl.to(track, {
+                    x: -scrollDistance,
+                    ease: "none",
+                    duration: 4
+                });
+                masterTl.to({}, { duration: 0.5 });
+
+            } else {
+                // Default pause
+                masterTl.to({}, { duration: 1 });
+            }
+
+
+
+            // --- B: TRANSITION NEXT SCENE OVER CURRENT ---
+
+            // If there is a next scene, slide it up from the bottom
+
+            if (index < scenes.length - 1) {
+
+                const nextScene = scenes[index + 1];
+
+                
+
+                masterTl.to(nextScene, {
+
+                    y: 0, // Slide up to 0 from its initial 100% css position
+
+                    ease: "power2.inOut",
+
+                    duration: 1.5 
+
+                });
+
+            }
+
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>
