@@ -25,8 +25,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.25039645"
-     inkscape:cx="377.40151"
-     inkscape:cy="764.7872"
+     inkscape:cx="-77.876503"
+     inkscape:cy="197.68651"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -51,12 +51,42 @@
        x="-12.679893"
        y="86.645927" /><text
        xml:space="preserve"
-       style="font-weight:bold;font-size:42.7105px;line-height:0.7;font-family:Garamond;-inkscape-font-specification:'Garamond, Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+       style="font-weight:normal;font-size:42.7105px;line-height:0.7;font-family:Inter;-inkscape-font-specification:'Inter, Normal';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;font-style:normal;font-stretch:normal;font-variant:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
        x="-125.3894"
        y="-55.213428"
        id="text1"><tspan
          sodipodi:role="line"
          id="tspan1"
-         style="stroke-width:0.5"
+         style="stroke-width:0.5;-inkscape-font-specification:'Inter, Normal';font-family:Inter;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:42.71049862px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          x="-125.3894"
-         y="-55.213428">VERTEXSTUDIO.TECH</tspan></text></g></svg>
+         y="-55.213428">VERTEXSTUDIO.TECH</tspan></text><text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.6435px;line-height:0.7;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, @opsz=32.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'opsz' 32;letter-spacing:0px;word-spacing:0px;fill:#ccff00;fill-opacity:1;stroke:none;stroke-width:0.5"
+       x="-121.92472"
+       y="132.44679"
+       id="text1-1"><tspan
+         sodipodi:role="line"
+         id="tspan1-1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.6435px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, @opsz=32.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'opsz' 32;fill:#ccff00;fill-opacity:1;stroke-width:0.5"
+         x="-121.92472"
+         y="132.44679">VERTEXSTUDIO.TECH</tspan></text><text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.6435px;line-height:0.7;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, @opsz=32.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'opsz' 32;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:0.374341;stroke:none;stroke-width:0.5"
+       x="-121.92472"
+       y="174.78017"
+       id="text1-1-2"><tspan
+         sodipodi:role="line"
+         id="tspan1-1-7"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.6435px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, @opsz=32.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'opsz' 32;fill:#ffffff;fill-opacity:0.374341;stroke-width:0.5"
+         x="-121.92472"
+         y="174.78017">VERTEXSTUDIO.TECH</tspan></text><text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.6435px;line-height:0.7;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, @opsz=32.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'opsz' 32;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:0.374341;stroke:none;stroke-width:0.5"
+       x="-121.92472"
+       y="90.11351"
+       id="text1-1-2-2"><tspan
+         sodipodi:role="line"
+         id="tspan1-1-7-5"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.6435px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono, @opsz=32.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'opsz' 32;fill:#ffffff;fill-opacity:0.374341;stroke-width:0.5"
+         x="-121.92472"
+         y="90.11351">VERTEXSTUDIO.TECH</tspan></text></g></svg>
