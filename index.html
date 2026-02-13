@@ -253,23 +253,15 @@
 
         <div class="flex gap-6 items-center">
 
-            <span class="text-accent flex items-center gap-2">
+            <span id="fps-counter">FPS // --</span>
 
-                <span class="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-
-                SYS.READY
-
-            </span>
-
-            <span>LAT.01//45.92</span>
+            <span id="load-time">LOAD // --s</span>
 
         </div>
 
         <div class="flex gap-6">
 
-            <span>RES: <script>document.write(window.innerWidth + 'x' + window.innerHeight)</script></span>
-
-            <span>OSS_V.2036.1</span>
+            <span id="resolution">RES // --x--</span>
 
         </div>
 
@@ -490,6 +482,45 @@
     <script>
 
         gsap.registerPlugin(ScrollTrigger);
+
+        // ===== HUD PERFORMANCE METRICS =====
+        (function() {
+            // FPS Counter
+            let lastTime = performance.now();
+            let frames = 0;
+            let fps = 0;
+
+            function updateFPS() {
+                frames++;
+                const currentTime = performance.now();
+                
+                // Update FPS every second
+                if (currentTime >= lastTime + 1000) {
+                    fps = Math.round((frames * 1000) / (currentTime - lastTime));
+                    document.getElementById('fps-counter').textContent = `FPS // ${fps}`;
+                    frames = 0;
+                    lastTime = currentTime;
+                }
+                
+                requestAnimationFrame(updateFPS);
+            }
+            updateFPS();
+
+            // Load Time (runs once after page load)
+            window.addEventListener('load', () => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                const loadTime = (perfData.loadEventEnd - perfData.fetchStart) / 1000;
+                document.getElementById('load-time').textContent = `LOAD // ${loadTime.toFixed(2)}s`;
+            });
+
+            // Resolution (updates on resize)
+            function updateResolution() {
+                const res = `${window.innerWidth}x${window.innerHeight}`;
+                document.getElementById('resolution').textContent = `RES // ${res}`;
+            }
+            updateResolution();
+            window.addEventListener('resize', updateResolution);
+        })();
 
         // Mobile detection (used by all animations below)
         const isMobile = window.innerWidth < 768;
