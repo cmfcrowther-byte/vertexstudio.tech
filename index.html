@@ -253,7 +253,7 @@
 
         <div class="flex gap-6 items-center">
 
-            <span id="fps-counter">FPS // --</span>
+            <span id="fps-counter" class="text-accent">FPS // --</span>
 
             <span id="load-time">LOAD // --s</span>
 
@@ -508,9 +508,12 @@
 
             // Load Time (runs once after page load)
             window.addEventListener('load', () => {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                const loadTime = (perfData.loadEventEnd - perfData.fetchStart) / 1000;
-                document.getElementById('load-time').textContent = `LOAD // ${loadTime.toFixed(2)}s`;
+                // Small delay to ensure all timing data is populated
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    const loadTime = (perfData.loadEventEnd - perfData.fetchStart) / 1000;
+                    document.getElementById('load-time').textContent = `LOAD // ${loadTime.toFixed(2)}s`;
+                }, 0);
             });
 
             // Resolution (updates on resize)
