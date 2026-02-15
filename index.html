@@ -96,7 +96,19 @@
 
         .hud-left { @apply fixed top-10 left-0 w-14 h-[calc(100vh-80px)] border-r border-primary/40 bg-black/80 z-50 flex flex-col items-center justify-center; }
 
-        
+        /* HUD extras: Velocity + Coordinates (inside Scene 01 Physics panel) */
+        .hud-extra-box { position: relative; }
+        .wind-streak {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            background: linear-gradient(to top, transparent, rgba(204,255,0,0.4), rgba(204,255,0,0.7));
+            pointer-events: none;
+            will-change: transform;
+            opacity: 0;
+            transform-origin: bottom center;
+        }
 
         /* Master container that gets pinned */
 
@@ -200,39 +212,116 @@
             .hud-left {
                 display: none !important;
             }
-            /* Shrink HUD bars to h-6 (24px) for minimal intrusion */
+            /* HUD bars: content closer to frame edges, taller for breathing room */
             .hud-top, .hud-bottom {
-                height: 1.5rem !important;
+                height: 2rem !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
             }
             /* Adjust viewport padding for smaller HUDs + no sidebar */
             #viewport-container {
                 padding-left: 0 !important;
-                padding-top: 24px !important;
-                padding-bottom: 24px !important;
+                padding-top: 32px !important;
+                padding-bottom: 32px !important;
             }
-            /* Scenes: full width, adjusted for 24px HUDs */
+            /* Scenes: full width, adjusted for HUDs */
             .scene {
                 left: 0 !important;
                 width: 100% !important;
-                top: 24px !important;
-                height: calc(100vh - 48px) !important;
+                top: 32px !important;
+                height: calc(100vh - 64px) !important;
             }
-            /* Scene 01: mobile-native centered layout with ZERO gap */
+            /* Scene 01: expansive vertical layout — vertex up, velocity/coords down */
             #scene-01 {
+                justify-content: flex-start !important;
+                align-items: stretch !important;
+                gap: 0 !important;
+                padding: 0.75rem 0.5rem !important;
+            }
+            /* Scene 01: vertex section taller with more breathing space; physics box gets less height */
+            #scene-01 > div:first-of-type {
+                flex: 0 0 auto !important;
+                flex-direction: column !important;
+                min-height: 44vh !important;
+            }
+            #scene-01 > div:first-of-type .interior-panel {
+                flex: 1 1 auto !important;
+                min-height: 32vh !important;
+            }
+            #scene-01 > .interior-panel {
+                flex: 1 1 auto !important;
+                min-height: 0 !important;
+            }
+            /* Physics of attention: headline centered vertically and horizontally */
+            #scene-01 > .interior-panel > div:first-of-type {
+                flex: 1 1 auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                min-height: 0 !important;
+            }
+            #scene-01 #headline-darkstar-wrap {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            /* Scene 01: vertex container — VERTEX/STUDIO/.TECH centered horizontally and vertically */
+            #scene-01 > div:first-of-type .interior-panel {
                 justify-content: center !important;
                 align-items: center !important;
-                gap: 0 !important;
-                padding: 0 !important;
             }
-            /* Scene 01: remove all flex/height constraints, hide interior borders */
-            #scene-01 > * {
-                flex: none !important;
-                height: auto !important;
+            #scene-01 #vertex-header-mobile {
+                justify-content: center !important;
+                padding-top: 0 !important;
+            }
+            /* Scene 01: HUD labels in own area below vertex (no longer overlay) */
+            #scene-01 #vertex-hud-labels {
+                position: static !important;
+                width: 100% !important;
+                max-width: none !important;
+                left: auto !important;
+                right: auto !important;
+                transform: none !important;
+                padding: 0.5rem 0.25rem 0.75rem !important;
             }
             #scene-01 .interior-panel {
-                border: none !important;
+                border: 1px solid rgba(60, 0, 255, 0.3) !important;
                 background: transparent !important;
                 padding: 0 !important;
+            }
+            #scene-01 #vertex-header-mobile {
+                padding-left: 0;
+                padding-right: 0;
+            }
+            #scene-01 #headline-physics {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                width: 90% !important;
+                max-width: 90vw !important;
+                font-size: clamp(2.25rem, 10.5vw, 4rem) !important;
+                line-height: 1.15 !important;
+                text-align: center !important;
+            }
+            /* Scene 01: velocity + coords side by side at bottom, smaller fonts for mobile */
+            #scene-01 #hud-extras {
+                margin-top: auto !important;
+                padding: 0.75rem 0.25rem 0.5rem !important;
+                flex-direction: row !important;
+                gap: 0.5rem !important;
+            }
+            #scene-01 #velocity-box,
+            #scene-01 #coords-box {
+                min-height: 36px !important;
+                padding: 0.375rem 0.5rem !important;
+            }
+            #scene-01 #hud-extras .hud-extra-label span.font-mono {
+                font-size: 0.5rem !important;
+            }
+            #scene-01 #hud-extras .hud-extra-value,
+            #scene-01 #hud-extras .hud-extra-value span {
+                font-size: 0.75rem !important;
             }
             /* Scene 02 horizontal track: each panel full-viewport-width */
             #scene-02-track > div {
@@ -247,7 +336,16 @@
 
 <body>
 
-
+    <svg aria-hidden="true" style="position:absolute;width:0;height:0">
+        <defs>
+            <filter id="heat-haze" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="2" result="noise">
+                    <animate attributeName="baseFrequency" values="0.03 0.05;0.04 0.06;0.03 0.05" dur="0.4s" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap id="heat-displace" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
 
     <header class="hud-top">
 
@@ -283,11 +381,9 @@
 
     <footer class="hud-bottom">
 
-        <div class="flex gap-4"><span>© 2036 OSS INC.</span></div>
+        <div class="flex gap-4"><span id="scroll-tracker">SCROLL // 0%</span></div>
 
-        <div class="text-accent animate-pulse tracking-[0.5em]">DASHBOARD_STABLE</div>
-
-        <div class="flex gap-4 text-right"><span>SECURE CONNECTION</span><span class="text-accent">ENCRYPTED</span></div>
+        <div class="flex gap-4 text-right"><span id="scene-tracker" class="text-accent tracking-[0.5em]">SCENE // 01 / 06</span></div>
 
     </footer>
 
@@ -301,11 +397,14 @@
 
         <section id="scene-01" class="scene flex flex-col p-1 gap-1 bg-primary/10">
 
-            <div class="flex flex-1 md:h-2/3 gap-1">
+            <div class="flex flex-1 md:h-2/3 gap-1 relative">
 
                 <div class="interior-panel w-full items-center justify-center relative overflow-hidden" style="background:#000;">
 
                     <div class="absolute top-3 left-3 font-mono text-[10px] text-primary/60 z-20">01_CORE_VISUAL</div>
+
+                    <!-- Wind layer — blows up from behind letters when scene 02 rises -->
+                    <div id="vertex-wind" class="absolute inset-0 overflow-hidden pointer-events-none" style="z-index:14;"></div>
 
                     <!-- Desktop: animated single-line version -->
                     <div id="vertex-header" class="hidden md:flex items-center justify-center w-full relative overflow-hidden" style="z-index:15; height:100%;">
@@ -330,19 +429,44 @@
 
                 </div>
 
+                <!-- Vertex HUD labels — desktop: absolute overlay; mobile: own area below vertex -->
+                <div id="vertex-hud-labels" class="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] max-w-xl overflow-hidden z-20">
+                    <div id="vertex-hud-track" class="flex" style="width: 300%;">
+                        <div id="vertex-label-1" class="vertex-hud-label flex-shrink-0 flex items-center justify-center border border-primary/40 bg-black/80 backdrop-blur-sm px-4 py-2 font-mono text-[12px] text-gray-400 tracking-widest whitespace-nowrap" style="width: 33.333%; min-width: 33.333%;">INFINITE_RESOLUTION // LOSSLESS_EXPANSION</div>
+                        <div id="vertex-label-2" class="vertex-hud-label flex-shrink-0 flex items-center justify-center border border-primary/40 bg-black/80 backdrop-blur-sm px-4 py-2 font-mono text-[12px] text-gray-400 tracking-widest whitespace-nowrap" style="width: 33.333%; min-width: 33.333%;">WEIGHTLESS_CORE // INSTANT_LOAD</div>
+                        <div id="vertex-label-3" class="vertex-hud-label flex-shrink-0 flex items-center justify-center border border-primary/40 bg-black/80 backdrop-blur-sm px-4 py-2 font-mono text-[12px] text-gray-400 tracking-widest whitespace-nowrap" style="width: 33.333%; min-width: 33.333%;">GPU_NATIVE // HARDWARE_ACCELERATED</div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="interior-panel flex-1 md:h-1/3 overflow-hidden justify-center items-center relative">
+            <div class="interior-panel flex-1 md:h-1/3 overflow-hidden justify-center items-center relative flex flex-col">
 
-                <div class="relative">
-                    <!-- Base layer — solid white, PHYSICS and ATTENTION fade out as blue fill rises -->
-                    <h2 id="headline-physics" class="text-3xl md:text-[7vw] leading-tight md:leading-none font-bold font-display tracking-tighter md:whitespace-nowrap px-4 md:translate-y-2 text-center text-white" style="will-change: transform, opacity; -webkit-font-smoothing: antialiased; backface-visibility: hidden;">
-                        THE <span class="headline-fillable">PHYSICS</span><br class="md:hidden"> OF <span class="headline-fillable">ATTENTION</span>
-                    </h2>
-                    <!-- Blue fill layer — rises from bottom, only colors PHYSICS and ATTENTION -->
-                    <h2 id="headline-physics-fill" class="text-3xl md:text-[7vw] leading-tight md:leading-none font-bold font-display tracking-tighter md:whitespace-nowrap px-4 md:translate-y-2 absolute inset-0 text-center text-white" style="clip-path:inset(100% 0 0 0); will-change: transform, opacity; -webkit-font-smoothing: antialiased; backface-visibility: hidden;">
-                        THE <span style="color:#3c00ff; text-shadow: 0 0 0.5px #3c00ff;">PHYSICS</span><br class="md:hidden"> OF <span style="color:#3c00ff; text-shadow: 0 0 0.5px #3c00ff;">ATTENTION</span>
-                    </h2>
+                <div class="relative flex-1 flex items-center justify-center">
+                    <div id="headline-darkstar-wrap" class="relative" style="will-change: filter;">
+                        <h2 id="headline-physics" class="text-3xl md:text-[7vw] leading-tight md:leading-none font-bold font-display tracking-tighter md:whitespace-nowrap px-4 md:translate-y-2 text-center text-white" style="will-change: transform, opacity, text-shadow; -webkit-font-smoothing: antialiased; backface-visibility: hidden;">
+                            <span class="md:hidden block whitespace-nowrap">THE PHYSICS</span><span class="md:hidden block whitespace-nowrap">OF ATTENTION</span>
+                            <span class="hidden md:inline">THE PHYSICS OF ATTENTION</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Velocity + Coordinates — full width, built into bottom of Physics of Attention box -->
+                <div id="hud-extras" class="w-full flex flex-col md:flex-row gap-2 p-2 border-t border-primary/30 mt-auto shrink-0">
+                    <div id="velocity-box" class="hud-extra-box flex-1 min-h-[44px] flex flex-col border border-primary/40 bg-black/90 backdrop-blur-md rounded px-3 py-2 overflow-hidden relative">
+                        <div class="flex items-center gap-2 mb-1 hud-extra-label">
+                            <span class="w-1.5 h-1.5 bg-accent rounded-full shrink-0"></span>
+                            <span class="font-mono text-[9px] text-gray-500 uppercase">NODE.01 // SPEED</span>
+                        </div>
+                        <div class="flex items-baseline gap-1 flex-wrap hud-extra-value"><span class="text-xl font-bold tracking-tight text-white">Velocity //&nbsp;</span><span id="velocity-value" class="text-xl font-bold tracking-tight text-white">000</span></div>
+                    </div>
+                    <div id="coords-box" class="hud-extra-box flex-1 min-h-[44px] flex flex-col border border-primary/40 bg-black/90 backdrop-blur-md rounded px-3 py-2">
+                        <div class="flex items-center gap-2 mb-1 hud-extra-label">
+                            <span class="w-1.5 h-1.5 bg-primary rounded-full shrink-0"></span>
+                            <span class="font-mono text-[9px] text-gray-500 uppercase">NODE.02 // COORDINATES</span>
+                        </div>
+                        <div class="flex items-baseline hud-extra-value"><span id="coords-value" class="text-xl font-bold tracking-tight text-white">X:000 // Y:000</span></div>
+                    </div>
                 </div>
 
             </div>
@@ -565,43 +689,48 @@
                 // --- MOBILE: Three-line cascade + collision entrance ---
                 const mobileLines = gsap.utils.toArray('.vertex-mobile-line');
                 const headline = document.getElementById('headline-physics');
-                const headlineFill = document.getElementById('headline-physics-fill');
 
                 // Set initial positions: all three lines slide from top, headline from bottom
                 gsap.set(mobileLines, { y: -100, opacity: 0 });
-                gsap.set([headline, headlineFill], { y: 100, opacity: 0 });
+                gsap.set(headline, { y: 100, opacity: 0 });
 
                 // Three-line cascade: VERTEX → STUDIO → .TECH
                 tl.to(mobileLines, {
                     y: 0, opacity: 1,
                     duration: 1.2, ease: "expo.out",
-                    stagger: 0.12  // Increased stagger for more dramatic cascade
+                    stagger: 0.12
                 }, 0);
 
                 // Headline slides up simultaneously with the cascade
-                tl.to([headline, headlineFill], {
+                tl.to(headline, {
                     y: 0, opacity: 1,
                     duration: 1.2, ease: "expo.out"
                 }, 0);
             }
 
-            // Liquid fill on headline (desktop + mobile)
             if (!isMobile) {
                 tl.to('#headline-physics', {
                     opacity: 1, duration: 0.4, ease: "power2.out"
                 }, "+=0.3");
             }
+        })();
 
-            tl.to('#headline-physics-fill', {
-                clipPath: 'inset(0% 0 0 0)',
-                duration: 2.25, ease: "back.out(1.7)"
-            }, isMobile ? "+=0.2" : "-=0.2");
-
-            tl.to('.headline-fillable', {
-                opacity: 0,
-                duration: 1,
-                ease: "power2.out"
-            }, isMobile ? "+=0.2" : "-=0.2");
+        // ===== VERTEX HUD LABELS — scroll-activated: current slides out left, next slides in from right =====
+        (function() {
+            const track = document.getElementById('vertex-hud-track');
+            gsap.set(track, { xPercent: 0 }); // Start: first panel visible
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#viewport-container",
+                    start: "top top",
+                    end: "+=50%",
+                    scrub: 1.2,
+                    toggleActions: "none none none none"
+                }
+            });
+            // Panel 1: very brief. Panel 2: dominates (~88% of scroll). Panel 3: very brief.
+            tl.to(track, { xPercent: -33.33, duration: 0.015 }, 0.05);
+            tl.to(track, { xPercent: -66.66, duration: 0.015 }, 0.94);
         })();
 
         // 1. Array of all our scenes
@@ -701,7 +830,223 @@
 
         });
 
+        // ===== VERTEX EVAPORATION — vertical strokes from bottom of letters, scroll-activated, speed scales with scroll =====
+        (function() {
+            window.__vertexScrollState = { velocitySmooth: 0, rainMomentum: 0 };
+            const windContainer = document.getElementById('vertex-wind');
+            if (!windContainer) return;
+            const MAX_COUNT = 400;
+            const windParticles = [];
 
+            function getSpawnBounds() {
+                const w = windContainer.offsetWidth || 400;
+                const h = windContainer.offsetHeight || 250;
+                const header = document.getElementById('vertex-header');
+                const mobileHeader = document.getElementById('vertex-header-mobile');
+                const el = (header && window.getComputedStyle(header).display !== 'none') ? header : mobileHeader;
+                const cr = windContainer.getBoundingClientRect();
+                let xMin = w * 0.2;
+                let xMax = w * 0.8;
+                let yBase = h * 0.5;
+                if (el && cr.width > 0) {
+                    const er = el.getBoundingClientRect();
+                    if (er.width > 10 && er.height > 10) {
+                        xMin = Math.max(0, er.left - cr.left);
+                        xMax = Math.min(w, er.right - cr.left);
+                        if (xMax - xMin < 30) { xMin = w * 0.2; xMax = w * 0.8; }
+                        yBase = er.bottom - cr.top + 5;
+                    }
+                }
+                return { w, h, xMin, xMax, yBase: Math.min(yBase, h * 0.85) };
+            }
+
+            function initWind() {
+                windContainer.innerHTML = '';
+                windParticles.length = 0;
+                const { w, h, xMin, xMax, yBase } = getSpawnBounds();
+                const xRange = Math.max(40, xMax - xMin);
+                for (let i = 0; i < MAX_COUNT; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'wind-streak';
+                    const len = 15 + Math.random() * 45;
+                    el.style.height = len + 'px';
+                    windContainer.appendChild(el);
+                    windParticles.push({
+                        el,
+                        x: xMin + Math.random() * xRange,
+                        y: yBase + Math.random() * (h - yBase + 60),
+                        speed: 35 + Math.random() * 50,
+                        len
+                    });
+                }
+            }
+            initWind();
+            let t0 = performance.now();
+            let visibilitySmooth = 0;
+            function tick(now) {
+                const dt = Math.min((now - t0) / 1000, 0.1);
+                t0 = now;
+                const { w, h, xMin, xMax, yBase } = getSpawnBounds();
+                const xRange = Math.max(40, xMax - xMin);
+                const state = window.__vertexScrollState || { velocitySmooth: 0, rainMomentum: 0 };
+                const vel = state.velocitySmooth || 0;
+                const mom = Math.abs(state.rainMomentum || 0);
+                const scrollBoost = 1 + vel / 80 + mom / 100;
+                const rawVisibility = Math.min(1, (vel + mom * 0.5) / 25);
+                if (rawVisibility > visibilitySmooth) {
+                    visibilitySmooth += (rawVisibility - visibilitySmooth) * 0.2;
+                } else {
+                    visibilitySmooth *= 0.985;
+                }
+                const visibilityFactor = visibilitySmooth;
+                const activeCount = Math.floor(visibilityFactor * MAX_COUNT);
+
+                windParticles.forEach((wp, i) => {
+                    if (i >= activeCount || visibilityFactor < 0.02) {
+                        wp.el.style.opacity = '0';
+                        return;
+                    }
+                    wp.y -= wp.speed * scrollBoost * dt;
+                    if (wp.y < -wp.len - 30) {
+                        wp.x = xMin + Math.random() * xRange;
+                        wp.y = yBase + Math.random() * (h - yBase + 80);
+                    }
+                    const norm = (wp.y + wp.len) / (h + wp.len + 100);
+                    const op = Math.max(0, Math.min(1, norm * 2.2)) * 0.6 * visibilityFactor;
+                    wp.el.style.opacity = op.toFixed(2);
+                    wp.el.style.transform = `translate(${wp.x}px, ${wp.y}px)`;
+                });
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+            window.addEventListener('resize', () => { initWind(); t0 = performance.now(); });
+        })();
+
+        // ===== BOTTOM HUD: SCROLL + SCENE TRACKER =====
+        function updateHudTrackers() {
+            const raw = masterTl.scrollTrigger ? masterTl.scrollTrigger.progress : masterTl.progress;
+            const progress = (typeof raw === 'number' && !isNaN(raw)) ? raw : 0;
+            const pct = Math.round(progress * 100);
+            const sceneCount = scenes && scenes.length ? scenes.length : 6;
+            const sceneNum = Math.max(1, Math.min(Math.ceil(progress * sceneCount) || 1, sceneCount));
+            document.getElementById('scroll-tracker').textContent = `SCROLL // ${pct}%`;
+            document.getElementById('scene-tracker').textContent = `SCENE // ${String(sceneNum).padStart(2, '0')} / ${String(sceneCount).padStart(2, '0')}`;
+        }
+        masterTl.eventCallback("onUpdate", updateHudTrackers);
+        ScrollTrigger.addEventListener("refresh", updateHudTrackers);
+        updateHudTrackers();
+
+        // ===== VELOCITY + COORDINATES HUD =====
+        (function() {
+            // Velocity tracking (scroll speed)
+            let lastScrollTime = performance.now();
+            let lastScrollY = window.scrollY || 0;
+            let velocity = 0;
+            let velocitySmooth = 0;
+
+            // Rain physics: Newtonian momentum with friction
+            const FRICTION = 0.95;
+            const VELOCITY_MULTIPLIER = 0.15;
+            let rainMomentum = 0;
+            let heatIntensitySmooth = 0;
+            function onScroll(direction) {
+                const now = performance.now();
+                const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+                const delta = (now - lastScrollTime) / 1000;
+                if (delta > 0) {
+                    const speed = Math.abs(scrollY - lastScrollY) / delta;
+                    velocity = speed;
+                    addRainImpulse(direction > 0 ? speed : -speed);
+                }
+                lastScrollTime = now;
+                lastScrollY = scrollY;
+            }
+
+            function addRainImpulse(signedSpeed) {
+                rainMomentum += signedSpeed * VELOCITY_MULTIPLIER;
+            }
+
+            let lastT = performance.now();
+            function tick() {
+                const now = performance.now();
+                const dt = Math.min((now - lastT) / 1000, 0.1);
+                lastT = now;
+
+                velocity *= 0.6;
+                velocitySmooth = velocitySmooth * 0.92 + velocity * 0.08;
+                rainMomentum *= FRICTION;
+                if (window.__vertexScrollState) {
+                    window.__vertexScrollState.velocitySmooth = velocitySmooth;
+                    window.__vertexScrollState.rainMomentum = rainMomentum;
+                }
+                const displayVel = velocitySmooth < 8 ? 0 : Math.round(velocitySmooth);
+                document.getElementById('velocity-value').textContent = String(displayVel).padStart(3, '0');
+
+                // ===== DARKSTAR RE-ENTRY: headline thermal effect (shares rain momentum) =====
+                const HEAT_MAX = 140;
+                const rawHeat = Math.min(1, Math.abs(rainMomentum) / HEAT_MAX);
+                const HEAT_FADE_DECAY = 0.985; // slower fade-out (higher = longer linger)
+                heatIntensitySmooth = Math.max(rawHeat, heatIntensitySmooth * HEAT_FADE_DECAY);
+                const heatIntensity = heatIntensitySmooth;
+                const heatDir = Math.sign(rainMomentum) || 1;
+                const headline = document.getElementById('headline-physics');
+                const wrap = document.getElementById('headline-darkstar-wrap');
+                const displaceEl = document.getElementById('heat-displace');
+                if (heatIntensity < 0.02) {
+                    headline.style.textShadow = 'none';
+                    headline.style.color = 'rgb(255,255,255)';
+                    wrap.style.filter = 'none';
+                } else {
+                    const a = heatIntensity;
+                    const y = heatDir > 0 ? 1 : -1;
+                    const shadows = [
+                        `0 ${y*2}px 4px rgba(255,49,49,${(a*0.9).toFixed(2)})`,
+                        `0 ${y*4}px 10px rgba(255,49,49,${(a*0.7).toFixed(2)})`,
+                        `0 ${y*6}px 18px rgba(255,80,80,${(a*0.5).toFixed(2)})`,
+                        `0 ${y*10}px 28px rgba(255,100,100,${(a*0.3).toFixed(2)})`
+                    ];
+                    headline.style.textShadow = shadows.join(', ');
+                    const tint = 1 - a * 0.4;
+                    headline.style.color = `rgb(${Math.round(255)},${Math.round(255*tint)},${Math.round(255*tint)})`;
+                    if (heatIntensity > 0.5 && displaceEl) {
+                        const scale = (heatIntensity - 0.5) * 8;
+                        displaceEl.setAttribute('scale', scale.toFixed(1));
+                        wrap.style.filter = 'url(#heat-haze)';
+                    } else {
+                        wrap.style.filter = 'none';
+                    }
+                }
+
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+
+            let lastScrollYForDir = window.scrollY ?? document.documentElement.scrollTop ?? 0;
+            window.addEventListener('wheel', (e) => {
+                const mag = Math.abs(e.deltaY) * 0.8;
+                velocity += mag;
+                addRainImpulse(e.deltaY * 0.8);
+            }, { passive: true });
+            window.addEventListener('scroll', () => {
+                const sy = window.scrollY || document.documentElement.scrollTop || 0;
+                const dir = sy > lastScrollYForDir ? 1 : (sy < lastScrollYForDir ? -1 : 0);
+                onScroll(dir);
+                lastScrollYForDir = sy;
+            }, { passive: true });
+            window.addEventListener('touchmove', () => { lastScrollYForDir = window.scrollY || 0; }, { passive: true });
+
+            // Coordinates tracking (cursor on desktop, thumb on mobile)
+            function updateCoords(x, y) {
+                const px = String(Math.round(x)).padStart(3, '0');
+                const py = String(Math.round(y)).padStart(3, '0');
+                document.getElementById('coords-value').textContent = `X:${px} // Y:${py}`;
+            }
+
+            document.addEventListener('mousemove', (e) => updateCoords(e.clientX, e.clientY));
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length) updateCoords(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+        })();
 
     </script>
 
