@@ -218,8 +218,10 @@
                 padding-left: 0.5rem !important;
                 padding-right: 0.5rem !important;
             }
-            /* Adjust viewport padding for smaller HUDs + no sidebar */
+            /* Adjust viewport: use svh so content fits when URL bar is visible on load */
             #viewport-container {
+                height: 100vh !important;
+                height: 100svh !important;
                 padding-left: 0 !important;
                 padding-top: 32px !important;
                 padding-bottom: 32px !important;
@@ -230,6 +232,7 @@
                 width: 100% !important;
                 top: 32px !important;
                 height: calc(100vh - 64px) !important;
+                height: calc(100svh - 64px) !important;
             }
             /* Scene 01: stretch to fill viewport gap between header/footer */
             #scene-01 {
