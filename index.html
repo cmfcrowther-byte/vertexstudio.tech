@@ -425,9 +425,16 @@
             }
             .neural-tape-mobile-track {
                 display: flex;
+                flex-direction: column;
                 gap: 0.5rem;
+                align-items: center;
+                justify-content: center;
+            }
+            .neural-tape-mobile-row {
+                display: flex;
                 flex-wrap: nowrap;
-                justify-content: flex-start;
+                gap: 0.5rem;
+                justify-content: center;
                 align-items: center;
             }
             .neural-tape-mobile-box {
@@ -649,28 +656,32 @@
                     </div>
                 </div>
             </div>
-            <!-- Mobile only: sliding container boxes at bottom (trigger 23%, then auto-run) -->
+            <!-- Mobile only: two rows of sliding container boxes at bottom (trigger 23%, then auto-run) -->
             <div class="neural-tape-mobile" aria-hidden="true">
                 <div class="neural-tape-mobile-track">
-                    <div class="neural-tape-mobile-box">
-                        <span class="tape-main">IDENT // 13MS</span>
-                        <span class="tape-sub">MINIMUM_PERCEPTION_TIME</span>
+                    <div class="neural-tape-mobile-row">
+                        <div class="neural-tape-mobile-box">
+                            <span class="tape-main">IDENT // 13MS</span>
+                            <span class="tape-sub">MINIMUM_PERCEPTION_TIME</span>
+                        </div>
+                        <div class="neural-tape-mobile-box">
+                            <span class="tape-main">REACTION // 150MS</span>
+                            <span class="tape-sub">NEURAL_TRIGGER_LATENCY</span>
+                        </div>
+                        <div class="neural-tape-mobile-box">
+                            <span class="tape-main">GAZE_FIXATION // 300MS</span>
+                            <span class="tape-sub">EYE_DWELL_AVERAGE</span>
+                        </div>
                     </div>
-                    <div class="neural-tape-mobile-box">
-                        <span class="tape-main">REACTION // 150MS</span>
-                        <span class="tape-sub">NEURAL_TRIGGER_LATENCY</span>
-                    </div>
-                    <div class="neural-tape-mobile-box">
-                        <span class="tape-main">GAZE_FIXATION // 300MS</span>
-                        <span class="tape-sub">EYE_DWELL_AVERAGE</span>
-                    </div>
-                    <div class="neural-tape-mobile-box">
-                        <span class="tape-main">RETINAL_RODS // 90_MILLION</span>
-                        <span class="tape-sub">OPTICAL_MOTION_SENSORS</span>
-                    </div>
-                    <div class="neural-tape-mobile-box">
-                        <span class="tape-main">RETINAL_ACUITY_02_DEG //</span>
-                        <span class="tape-sub">DETAIL_FOCUS_WINDOW</span>
+                    <div class="neural-tape-mobile-row">
+                        <div class="neural-tape-mobile-box">
+                            <span class="tape-main">RETINAL_RODS // 90_MILLION</span>
+                            <span class="tape-sub">OPTICAL_MOTION_SENSORS</span>
+                        </div>
+                        <div class="neural-tape-mobile-box">
+                            <span class="tape-main">RETINAL_ACUITY_02_DEG //</span>
+                            <span class="tape-sub">DETAIL_FOCUS_WINDOW</span>
+                        </div>
                     </div>
                 </div>
             </div>
