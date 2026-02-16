@@ -401,11 +401,11 @@
         </div>
     </footer>
 
-    <!-- Mobile tagline: static bar, no animation -->
+    <!-- Mobile only: tagline that occupies extra space revealed when URL bar hides -->
     <div
         id="urlbar-reveal-tagline"
-        class="md:hidden fixed left-0 right-0 flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase text-white pointer-events-none z-40 bg-black"
-        style="color:#ffffff; height:2rem; overflow:visible; bottom:2rem;"
+        class="md:hidden fixed left-0 right-0 flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase text-white pointer-events-none z-30 bg-black"
+        style="color:#ffffff; height:0; overflow:hidden; bottom:2rem;"
     >
         GEOMETRY-DRIVEN // RESOLUTION-AGNOSTIC
     </div>
@@ -957,6 +957,41 @@
         masterTl.eventCallback("onUpdate", updateHudTrackers);
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
         updateHudTrackers();
+
+        // ===== MOBILE: tagline appears only in the extra gap when URL bar retreats (no animation) =====
+        (function() {
+            const el = document.getElementById('urlbar-reveal-tagline');
+            if (!el) return;
+            let minHeightSeen = Infinity;
+            function measure() {
+                const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+                // On desktop, always hide the bar
+                if (window.innerWidth >= 768) {
+                    el.style.height = '0px';
+                    el.style.overflow = 'hidden';
+                    return;
+                }
+                // Track the smallest viewport height we've seen (when URL bar is fully visible)
+                minHeightSeen = Math.min(minHeightSeen, h);
+                const gap = Math.max(0, h - minHeightSeen);
+                // If the gap is small, keep it completely hidden
+                if (gap < 24) {
+                    el.style.height = '0px';
+                    el.style.overflow = 'hidden';
+                } else {
+                    // Once there's real extra space, instantly fill it (no transition)
+                    el.style.height = gap + 'px';
+                    el.style.overflow = 'visible';
+                }
+            }
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', measure);
+                window.visualViewport.addEventListener('scroll', measure);
+            }
+            window.addEventListener('resize', measure);
+            window.addEventListener('load', measure);
+            measure();
+        })();
 
         // ===== VELOCITY + COORDINATES HUD =====
         (function() {
