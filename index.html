@@ -401,8 +401,14 @@
         </div>
     </footer>
 
-    <!-- Mobile only: appears in the gap when URL bar retreats -->
-    <div id="urlbar-reveal-tagline" class="md:hidden fixed left-0 right-0 flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase text-white pointer-events-none z-40 bg-black border-t border-primary/30" style="color: #ffffff; height: 0; overflow: hidden; bottom: 2rem;">GEOMETRY-DRIVEN // RESOLUTION-AGNOSTIC</div>
+    <!-- Mobile tagline: static bar, no animation -->
+    <div
+        id="urlbar-reveal-tagline"
+        class="md:hidden fixed left-0 right-0 flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase text-white pointer-events-none z-40 bg-black"
+        style="color:#ffffff; height:2rem; overflow:visible; bottom:2rem;"
+    >
+        GEOMETRY-DRIVEN // RESOLUTION-AGNOSTIC
+    </div>
 
 
 
@@ -658,32 +664,6 @@
             }
             updateResolution();
             window.addEventListener('resize', updateResolution);
-        })();
-
-        // ===== MOBILE: tagline in gap when URL bar retreats =====
-        (function() {
-            const el = document.getElementById('urlbar-reveal-tagline');
-            if (!el) return;
-            let minHeightSeen = Infinity;
-            function measure() {
-                const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-                if (window.innerWidth >= 768) {
-                    el.style.height = '0';
-                    el.style.overflow = 'hidden';
-                    return;
-                }
-                minHeightSeen = Math.min(minHeightSeen, h);
-                const gap = Math.max(0, h - minHeightSeen);
-                el.style.height = gap + 'px';
-                el.style.overflow = gap > 0 ? 'visible' : 'hidden';
-            }
-            if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', measure);
-                window.visualViewport.addEventListener('scroll', measure);
-            }
-            window.addEventListener('resize', measure);
-            window.addEventListener('load', measure);
-            measure();
         })();
 
         // Mobile detection (used by all animations below)
