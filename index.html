@@ -955,15 +955,33 @@
             window.addEventListener('resize', () => { initWind(); t0 = performance.now(); });
         })();
 
-        // ===== BOTTOM HUD: SCROLL + SCENE TRACKER =====
+        // ===== BOTTOM HUD: SCROLL + SCENE TRACKER + MOBILE TAGLINE PER SCENE =====
         function updateHudTrackers() {
             const raw = masterTl.scrollTrigger ? masterTl.scrollTrigger.progress : masterTl.progress;
             const progress = (typeof raw === 'number' && !isNaN(raw)) ? raw : 0;
             const pct = Math.round(progress * 100);
             const sceneCount = scenes && scenes.length ? scenes.length : 6;
             const sceneNum = Math.max(1, Math.min(Math.ceil(progress * sceneCount) || 1, sceneCount));
-            document.getElementById('scroll-tracker').textContent = `SCROLL // ${pct}%`;
-            document.getElementById('scene-tracker').textContent = `SCENE // ${String(sceneNum).padStart(2, '0')} / ${String(sceneCount).padStart(2, '0')}`;
+
+            // Existing HUD labels
+            document.getElementById('scroll-tracker').textContent =
+                `SCROLL // ${pct}%`;
+            document.getElementById('scene-tracker').textContent =
+                `SCENE // ${String(sceneNum).padStart(2, '0')} / ${String(sceneCount).padStart(2, '0')}`;
+
+            // Mobile URL-bar gap tagline: change copy per scene
+            const taglineEl = document.getElementById('urlbar-reveal-tagline');
+            if (taglineEl) {
+                const taglines = {
+                    1: 'GEOMETRY-DRIVEN 01',
+                    2: 'GEOMETRY-DRIVEN 02',
+                    3: 'GEOMETRY-DRIVEN 03',
+                    4: 'GEOMETRY-DRIVEN 04',
+                    5: 'GEOMETRY-DRIVEN 05',
+                    6: 'GEOMETRY-DRIVEN 06',
+                };
+                taglineEl.textContent = taglines[sceneNum] || 'GEOMETRY-DRIVEN 01';
+            }
         }
         masterTl.eventCallback("onUpdate", updateHudTrackers);
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
