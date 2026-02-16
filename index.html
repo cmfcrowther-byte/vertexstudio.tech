@@ -958,13 +958,12 @@
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
         updateHudTrackers();
 
-        // ===== MOBILE: tagline appears once when URL bar is fully retracted (no following movement) =====
+        // ===== MOBILE: tagline fills the live gap above the footer (tracks URL bar, no easing) =====
         (function() {
             const el = document.getElementById('urlbar-reveal-tagline');
             if (!el) return;
-            const THRESHOLD = 24;     // how much extra viewport height before we show it
+            const THRESHOLD = 24; // how much extra viewport height before we start showing it
             let minHeightSeen = Infinity;
-            let activated = false;
 
             function measure() {
                 const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -976,18 +975,18 @@
                     return;
                 }
 
-                // Once we've shown it, don't change it again
-                if (activated) return;
-
                 // Track the smallest viewport height we've seen (URL bar fully visible)
                 minHeightSeen = Math.min(minHeightSeen, h);
                 const gap = Math.max(0, h - minHeightSeen);
 
-                if (gap >= THRESHOLD) {
-                    // Snap the bar to exactly fill the revealed gap and show the text, centered
+                // If the gap is small, keep it completely hidden
+                if (gap < THRESHOLD) {
+                    el.style.height = '0px';
+                    el.style.overflow = 'hidden';
+                } else {
+                    // Fill the entire revealed gap so the text is vertically centered in that space
                     el.style.height = gap + 'px';
                     el.style.overflow = 'visible';
-                    activated = true;
                 }
             }
 
