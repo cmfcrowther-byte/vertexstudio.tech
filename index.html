@@ -958,11 +958,12 @@
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
         updateHudTrackers();
 
-        // ===== MOBILE: tagline appears once when URL bar is basically gone (no following movement) =====
+        // ===== MOBILE: tagline appears once when URL bar is basically gone (no following movement), centered in the gap =====
         (function() {
             const el = document.getElementById('urlbar-reveal-tagline');
             if (!el) return;
             const THRESHOLD = 40;   // how much extra viewport height before we show it
+            const BAR_HEIGHT = 24;  // fixed bar height so text is nicely sized
             let minHeightSeen = Infinity;
             let activated = false;  // once true, we never move the text again
 
@@ -985,9 +986,10 @@
 
                 // Wait until the gap is "big enough" (URL bar mostly hidden)
                 if (gap >= THRESHOLD) {
-                    // Use the gap size at this moment as our final height
-                    const targetHeight = gap;
-                    el.style.height = targetHeight + 'px';
+                    // Place a fixed-height bar vertically centered within the revealed gap above the footer
+                    const offset = Math.max(0, (gap - BAR_HEIGHT) / 2);
+                    el.style.height = BAR_HEIGHT + 'px';
+                    el.style.bottom = `calc(2rem + ${offset}px)`;
                     el.style.overflow = 'visible';
                     activated = true;
                 } else {
