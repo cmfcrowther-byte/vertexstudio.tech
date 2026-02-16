@@ -958,12 +958,13 @@
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
         updateHudTrackers();
 
-        // ===== MOBILE: tagline fills the live gap above the footer (tracks URL bar, no easing) =====
+        // ===== MOBILE: tagline appears once when URL bar is basically gone (no following movement) =====
         (function() {
             const el = document.getElementById('urlbar-reveal-tagline');
             if (!el) return;
-            const THRESHOLD = 24; // how much extra viewport height before we start showing it
+            const THRESHOLD = 40;   // how much extra viewport height before we show it
             let minHeightSeen = Infinity;
+            let activated = false;  // once true, we never move the text again
 
             function measure() {
                 const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -975,18 +976,24 @@
                     return;
                 }
 
+                // If we've already shown and fixed the bar, don't touch it again
+                if (activated) return;
+
                 // Track the smallest viewport height we've seen (URL bar fully visible)
                 minHeightSeen = Math.min(minHeightSeen, h);
                 const gap = Math.max(0, h - minHeightSeen);
 
-                // If the gap is small, keep it completely hidden
-                if (gap < THRESHOLD) {
+                // Wait until the gap is "big enough" (URL bar mostly hidden)
+                if (gap >= THRESHOLD) {
+                    // Use the gap size at this moment as our final height
+                    const targetHeight = gap;
+                    el.style.height = targetHeight + 'px';
+                    el.style.overflow = 'visible';
+                    activated = true;
+                } else {
+                    // Still too small: keep it hidden
                     el.style.height = '0px';
                     el.style.overflow = 'hidden';
-                } else {
-                    // Fill the entire revealed gap so the text is vertically centered in that space
-                    el.style.height = gap + 'px';
-                    el.style.overflow = 'visible';
                 }
             }
 
