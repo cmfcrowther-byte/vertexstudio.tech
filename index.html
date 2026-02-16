@@ -92,7 +92,7 @@
 
         .hud-top { @apply fixed top-0 left-0 w-full h-10 border-b border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
 
-        .hud-bottom { @apply fixed bottom-0 left-0 w-full min-h-10 border-t border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
+        .hud-bottom { @apply fixed bottom-0 left-0 w-full h-10 border-t border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
 
         .hud-left { @apply fixed top-10 left-0 w-14 h-[calc(100vh-80px)] border-r border-primary/40 bg-black/80 z-50 flex flex-col items-center justify-center; }
 
@@ -120,11 +120,11 @@
 
             height: 100vh;
 
-            /* Padding accommodates the fixed HUD + section tagline strip */
+            /* Padding accommodates the fixed HUD */
 
             padding-top: 40px; 
 
-            padding-bottom: 64px;
+            padding-bottom: 40px;
 
             padding-left: 56px;
 
@@ -148,7 +148,7 @@
 
             width: calc(100% - 56px);
 
-            height: calc(100vh - 104px);
+            height: calc(100vh - 80px);
 
             background-color: #050505;
 
@@ -219,29 +219,29 @@
                 padding-right: 0.5rem !important;
             }
             .hud-bottom {
-                height: auto !important;
-                min-height: 2rem !important;
-                padding: 0 0.5rem 0.5rem !important;
-            }
-            #section-tagline {
+                height: 2rem !important;
                 padding-left: 0.5rem !important;
                 padding-right: 0.5rem !important;
             }
-            /* Viewport: svh, extra padding for tagline strip */
+            /* Reveal tagline: above footer, height set by JS when URL bar retreats */
+            #urlbar-reveal-tagline {
+                bottom: 2rem !important;
+            }
+            /* Viewport: svh for stable layout */
             #viewport-container {
                 height: 100vh !important;
                 height: 100svh !important;
                 padding-left: 0 !important;
                 padding-top: 32px !important;
-                padding-bottom: 5rem !important;
+                padding-bottom: 32px !important;
             }
-            /* Scenes: height accounts for header + footer with tagline */
+            /* Scenes: full width, adjusted for HUDs */
             .scene {
                 left: 0 !important;
                 width: 100% !important;
                 top: 32px !important;
-                height: calc(100vh - 7rem) !important;
-                height: calc(100svh - 7rem) !important;
+                height: calc(100vh - 64px) !important;
+                height: calc(100svh - 64px) !important;
             }
             /* Scene 01: stretch to fill viewport gap between header/footer */
             #scene-01 {
@@ -394,13 +394,15 @@
 
 
 
-    <footer class="hud-bottom flex-col">
-        <div id="section-tagline" class="w-full flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase shrink-0 py-2 md:py-1.5 border-b border-primary/30 text-white" style="color: #ffffff;">GEOMETRY-DRIVEN // RESOLUTION-AGNOSTIC</div>
+    <footer class="hud-bottom">
         <div class="flex gap-4 justify-between items-center w-full">
             <span id="scroll-tracker">SCROLL // 0%</span>
             <span id="scene-tracker" class="text-accent tracking-[0.5em]">SCENE // 01 / 06</span>
         </div>
     </footer>
+
+    <!-- Mobile only: appears in the gap when URL bar retreats -->
+    <div id="urlbar-reveal-tagline" class="md:hidden fixed left-0 right-0 flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase text-white pointer-events-none z-40 bg-black border-t border-primary/30" style="color: #ffffff; height: 0; overflow: hidden; bottom: 2rem;">GEOMETRY-DRIVEN // RESOLUTION-AGNOSTIC</div>
 
 
 
@@ -656,6 +658,32 @@
             }
             updateResolution();
             window.addEventListener('resize', updateResolution);
+        })();
+
+        // ===== MOBILE: tagline in gap when URL bar retreats =====
+        (function() {
+            const el = document.getElementById('urlbar-reveal-tagline');
+            if (!el) return;
+            let minHeightSeen = Infinity;
+            function measure() {
+                const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+                if (window.innerWidth >= 768) {
+                    el.style.height = '0';
+                    el.style.overflow = 'hidden';
+                    return;
+                }
+                minHeightSeen = Math.min(minHeightSeen, h);
+                const gap = Math.max(0, h - minHeightSeen);
+                el.style.height = gap + 'px';
+                el.style.overflow = gap > 0 ? 'visible' : 'hidden';
+            }
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', measure);
+                window.visualViewport.addEventListener('scroll', measure);
+            }
+            window.addEventListener('resize', measure);
+            window.addEventListener('load', measure);
+            measure();
         })();
 
         // Mobile detection (used by all animations below)
