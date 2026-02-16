@@ -110,6 +110,49 @@
             transform-origin: bottom center;
         }
 
+        /* ========== SCENE 02: Neural Latency Tape (vertical HUD lines) ========== */
+        #scene-02-inner { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        .neural-tape {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            border-left: 1px solid rgba(60, 0, 255, 0.5);
+            pointer-events: none;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .neural-tape-left { left: 2rem; border-left-width: 1px; }
+        .neural-tape-right { right: 2rem; left: auto; border-left: none; border-right: 1px solid rgba(60, 0, 255, 0.5); }
+        .neural-tape-items {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-evenly;
+            height: 100%;
+            padding: 3rem 0;
+            gap: 2.5rem;
+        }
+        .neural-tape-left .neural-tape-items { align-items: flex-start; padding-left: 0.75rem; text-align: left; }
+        .neural-tape-right .neural-tape-items { align-items: flex-end; padding-right: 0.75rem; text-align: right; }
+        .neural-tape-right .neural-tape-item { text-align: right; }
+        .neural-tape-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            line-height: 1.35;
+            color: rgba(156, 163, 175, 0.95);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(60px);
+            will-change: transform, opacity;
+        }
+        .neural-tape-item .tape-main { color: rgba(204, 255, 0, 0.9); font-weight: 600; }
+        .neural-tape-item .tape-sub { color: rgba(156, 163, 175, 0.8); font-size: 9px; letter-spacing: 0.08em; }
+
         /* Master container that gets pinned */
 
         #viewport-container {
@@ -343,6 +386,45 @@
                 min-width: calc(100vw - 8px);
                 flex-shrink: 0;
             }
+            /* Scene 02 Neural Latency Tape: horizontal at top (left) and bottom (right) */
+            .neural-tape {
+                top: auto;
+                bottom: auto;
+                left: 0;
+                right: 0;
+                width: auto;
+                height: auto;
+                border-left: none;
+                border-right: none;
+                flex-direction: row;
+                justify-content: center;
+                gap: 0.75rem;
+            }
+            .neural-tape-left {
+                top: 0;
+                bottom: auto;
+                border-bottom: 1px solid rgba(60, 0, 255, 0.5);
+                padding: 0.5rem 0.75rem;
+                min-height: 3rem;
+            }
+            .neural-tape-right {
+                top: auto;
+                bottom: 0;
+                border-top: 1px solid rgba(60, 0, 255, 0.5);
+                border-bottom: none;
+                padding: 0.5rem 0.75rem;
+                min-height: 3rem;
+            }
+            .neural-tape-items {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem 1rem;
+            }
+            .neural-tape-left .neural-tape-items { padding-left: 0; align-items: center; }
+            .neural-tape-right .neural-tape-items { padding-right: 0; align-items: center; }
+            .neural-tape-item { transform: translateY(-20px); }
+            .neural-tape-right .neural-tape-item { transform: translateY(20px); }
         }
 
     </style>
@@ -507,9 +589,40 @@
 
 
 
-        <!-- Scene 02 now: Portfolio intro with animated headline -->
+        <!-- Scene 02 now: Portfolio intro with animated headline + Neural Latency Tape -->
         <section id="scene-02" class="scene flex items-center justify-center border border-primary/30 bg-black">
-            <div class="max-w-2xl mx-auto px-6 text-center">
+            <div id="scene-02-inner" class="w-full h-full">
+            <!-- Left vertical HUD line: Neural Latency Tape -->
+            <div class="neural-tape neural-tape-left" aria-hidden="true">
+                <div class="neural-tape-items">
+                    <div class="neural-tape-item">
+                        <span class="tape-main">IDENT // 13MS</span><br/>
+                        <span class="tape-sub">MINIMUM_PERCEPTION_TIME</span>
+                    </div>
+                    <div class="neural-tape-item">
+                        <span class="tape-main">REACTION // 150MS</span><br/>
+                        <span class="tape-sub">NEURAL_TRIGGER_LATENCY</span>
+                    </div>
+                    <div class="neural-tape-item">
+                        <span class="tape-main">GAZE_FIXATION // 300MS</span><br/>
+                        <span class="tape-sub">EYE_DWELL_AVERAGE</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Right vertical HUD line: Neural Latency Tape -->
+            <div class="neural-tape neural-tape-right" aria-hidden="true">
+                <div class="neural-tape-items">
+                    <div class="neural-tape-item">
+                        <span class="tape-main">RETINAL_RODS // 90_MILLION</span><br/>
+                        <span class="tape-sub">OPTICAL_MOTION_SENSORS</span>
+                    </div>
+                    <div class="neural-tape-item">
+                        <span class="tape-main">RETINAL_ACUITY_02_DEG //</span><br/>
+                        <span class="tape-sub">DETAIL_FOCUS_WINDOW</span>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-2xl mx-auto px-6 text-center relative z-10 flex-shrink-0">
                 <!-- Evolution line: each word gets its own span -->
                 <h2
                     id="scene-02-evolution"
@@ -530,6 +643,7 @@
                     interactive experiences are imprinted. We command focus—extending every second spent on-site by compelling the
                     subconscious to ignore the noise and lock onto the signal.
                 </p>
+            </div>
             </div>
         </section>
 
@@ -1003,6 +1117,20 @@
                 };
                 taglineEl.textContent = taglines[sceneNum] || 'GEOMETRY-DRIVEN 01';
             }
+
+            // Scene 02: Evolution + copy at 19%, Neural Latency Tape at 22%
+            if (window.__scene02Tl && !window.__scene02EvolutionPlayed) {
+                if (pct >= 19 && pct < 60) {
+                    window.__scene02Tl.play();
+                    window.__scene02EvolutionPlayed = true;
+                }
+            }
+            if (window.__scene02TapeTl && !window.__scene02TapePlayed) {
+                if (pct >= 22 && pct < 60) {
+                    window.__scene02TapeTl.play();
+                    window.__scene02TapePlayed = true;
+                }
+            }
         }
         masterTl.eventCallback("onUpdate", updateHudTrackers);
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
@@ -1073,49 +1201,59 @@
             measure();
         })();
 
-        // ===== SCENE 02: Evolution line (per-word slide-in) + copy fade-in =====
+        // ===== SCENE 02: Evolution + copy (19% scroll) | Neural Latency Tape (22% scroll) =====
         (function() {
             const scene = document.getElementById('scene-02');
-            if (!scene || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+            if (!scene || typeof gsap === 'undefined') return;
 
             const words = scene.querySelectorAll('.evo-word');
             const copy = document.getElementById('scene-02-copy');
+            const tapeItems = scene.querySelectorAll('.neural-tape-item');
+            const isMobile = window.innerWidth < 768;
             if (!words.length || !copy) return;
 
             // Initial state: words slightly below and invisible
             gsap.set(words, { y: 16, opacity: 0 });
 
-            const tl = gsap.timeline({
+            // Neural Latency Tape: desktop = slide from bottom (y: 60); mobile = left from top (y: -20), right from bottom (y: 20)
+            tapeItems.forEach(function(el) {
+                const isRight = el.closest('.neural-tape-right');
+                if (isMobile && isRight) gsap.set(el, { y: 20, opacity: 0 });
+                else if (isMobile) gsap.set(el, { y: -20, opacity: 0 });
+                else gsap.set(el, { y: 60, opacity: 0 });
+            });
+
+            // Evolution + copy timeline — triggered at 19%
+            const evolutionTl = gsap.timeline({
                 paused: true,
                 defaults: { ease: 'power2.out' }
             });
-
-            // 1) Words slide up & fade in, one after another, with a brief hang
-            tl.to(words, {
+            evolutionTl.to(words, {
                 y: 0,
                 opacity: 1,
                 duration: 0.45,
-                stagger: 0.22 // slower cadence so each word hangs for a moment
+                stagger: 0.22
             });
+            evolutionTl.to(copy, { opacity: 1, duration: 0.8 }, '+=0.1');
 
-            // 2) After last word, fade in the paragraph in place (no motion)
-            tl.to(
-                copy,
-                {
+            // Neural Latency Tape timeline — triggered at 22%
+            const tapeTl = gsap.timeline({
+                paused: true,
+                defaults: { ease: 'power2.out' }
+            });
+            if (tapeItems.length) {
+                tapeTl.to(tapeItems, {
+                    y: 0,
                     opacity: 1,
-                    duration: 0.8
-                },
-                '+=0.1' // tiny pause after last word
-            );
+                    duration: 0.5,
+                    stagger: 0.15
+                });
+            }
 
-            // Trigger when Scene 02 is active in the pinned stack
-            ScrollTrigger.create({
-                trigger: scene,
-                start: 'top center',
-                end: 'bottom center',
-                onEnter: () => tl.play(),
-                once: true
-            });
+            window.__scene02Tl = evolutionTl;
+            window.__scene02EvolutionPlayed = false;
+            window.__scene02TapeTl = tapeTl;
+            window.__scene02TapePlayed = false;
         })();
 
         // ===== VELOCITY + COORDINATES HUD =====
