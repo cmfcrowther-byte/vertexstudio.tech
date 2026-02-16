@@ -386,45 +386,72 @@
                 min-width: calc(100vw - 8px);
                 flex-shrink: 0;
             }
-            /* Scene 02 Neural Latency Tape: horizontal at top (left) and bottom (right) */
-            .neural-tape {
-                top: auto;
-                bottom: auto;
+            /* Scene 02: Evolution + paragraph — constrain width on mobile */
+            #scene-02-inner .max-w-2xl {
+                max-width: 92vw !important;
+                width: 100% !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                box-sizing: border-box;
+            }
+            #scene-02-evolution {
+                font-size: 1.65rem !important;
+                line-height: 1.2 !important;
+            }
+            #scene-02-copy {
+                font-size: 0.6875rem !important;
+                line-height: 1.5 !important;
+                max-width: 100% !important;
+            }
+            /* Scene 02 Neural Tape: hide desktop left/right strips on mobile */
+            .neural-tape-left,
+            .neural-tape-right {
+                display: none !important;
+            }
+            /* Scene 02 Mobile: sliding container boxes at bottom (trigger 23%) */
+            .neural-tape-mobile {
+                display: flex !important;
+                position: absolute;
+                bottom: 1rem;
                 left: 0;
                 right: 0;
-                width: auto;
-                height: auto;
-                border-left: none;
-                border-right: none;
-                flex-direction: row;
+                overflow: hidden;
                 justify-content: center;
-                gap: 0.75rem;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0 0.5rem;
+                flex-wrap: nowrap;
+                z-index: 5;
             }
-            .neural-tape-left {
-                top: 0;
-                bottom: auto;
-                border-bottom: 1px solid rgba(60, 0, 255, 0.5);
-                padding: 0.5rem 0.75rem;
-                min-height: 3rem;
+            .neural-tape-mobile-track {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                align-items: center;
             }
-            .neural-tape-right {
-                top: auto;
-                bottom: 0;
-                border-top: 1px solid rgba(60, 0, 255, 0.5);
-                border-bottom: none;
-                padding: 0.5rem 0.75rem;
-                min-height: 3rem;
+            .neural-tape-mobile-box {
+                flex-shrink: 0;
+                border: 1px solid rgba(60, 0, 255, 0.5);
+                background: rgba(0, 0, 0, 0.85);
+                padding: 0.4rem 0.6rem;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9px;
+                line-height: 1.3;
+                color: rgba(156, 163, 175, 0.95);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                white-space: nowrap;
+                opacity: 0;
+                transform: translateX(120%);
+                will-change: transform, opacity;
             }
-            .neural-tape-items {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.5rem 1rem;
-            }
-            .neural-tape-left .neural-tape-items { padding-left: 0; align-items: center; }
-            .neural-tape-right .neural-tape-items { padding-right: 0; align-items: center; }
-            .neural-tape-item { transform: translateY(-20px); }
-            .neural-tape-right .neural-tape-item { transform: translateY(20px); }
+            .neural-tape-mobile-box .tape-main { color: rgba(204, 255, 0, 0.9); font-weight: 600; }
+            .neural-tape-mobile-box .tape-sub { display: block; color: rgba(156, 163, 175, 0.8); font-size: 8px; letter-spacing: 0.04em; }
+        }
+        /* Desktop: hide mobile tape strip */
+        @media (min-width: 768px) {
+            .neural-tape-mobile { display: none !important; }
         }
 
     </style>
@@ -618,6 +645,31 @@
                     </div>
                     <div class="neural-tape-item">
                         <span class="tape-main">RETINAL_ACUITY_02_DEG //</span><br/>
+                        <span class="tape-sub">DETAIL_FOCUS_WINDOW</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile only: sliding container boxes at bottom (trigger 23%, then auto-run) -->
+            <div class="neural-tape-mobile" aria-hidden="true">
+                <div class="neural-tape-mobile-track">
+                    <div class="neural-tape-mobile-box">
+                        <span class="tape-main">IDENT // 13MS</span>
+                        <span class="tape-sub">MINIMUM_PERCEPTION_TIME</span>
+                    </div>
+                    <div class="neural-tape-mobile-box">
+                        <span class="tape-main">REACTION // 150MS</span>
+                        <span class="tape-sub">NEURAL_TRIGGER_LATENCY</span>
+                    </div>
+                    <div class="neural-tape-mobile-box">
+                        <span class="tape-main">GAZE_FIXATION // 300MS</span>
+                        <span class="tape-sub">EYE_DWELL_AVERAGE</span>
+                    </div>
+                    <div class="neural-tape-mobile-box">
+                        <span class="tape-main">RETINAL_RODS // 90_MILLION</span>
+                        <span class="tape-sub">OPTICAL_MOTION_SENSORS</span>
+                    </div>
+                    <div class="neural-tape-mobile-box">
+                        <span class="tape-main">RETINAL_ACUITY_02_DEG //</span>
                         <span class="tape-sub">DETAIL_FOCUS_WINDOW</span>
                     </div>
                 </div>
@@ -1118,15 +1170,16 @@
                 taglineEl.textContent = taglines[sceneNum] || 'GEOMETRY-DRIVEN 01';
             }
 
-            // Scene 02: Evolution + copy at 19%, Neural Latency Tape at 22%
+            // Scene 02: Evolution + copy at 19%; Neural Tape desktop 22% / mobile 23%
             if (window.__scene02Tl && !window.__scene02EvolutionPlayed) {
                 if (pct >= 19 && pct < 60) {
                     window.__scene02Tl.play();
                     window.__scene02EvolutionPlayed = true;
                 }
             }
+            var tapeThreshold = window.__scene02TapeIsMobile ? 23 : 22;
             if (window.__scene02TapeTl && !window.__scene02TapePlayed) {
-                if (pct >= 22 && pct < 60) {
+                if (pct >= tapeThreshold && pct < 60) {
                     window.__scene02TapeTl.play();
                     window.__scene02TapePlayed = true;
                 }
@@ -1201,7 +1254,7 @@
             measure();
         })();
 
-        // ===== SCENE 02: Evolution + copy (19% scroll) | Neural Latency Tape (22% scroll) =====
+        // ===== SCENE 02: Evolution + copy (19%) | Neural Tape desktop 22% / mobile 23% sliding boxes =====
         (function() {
             const scene = document.getElementById('scene-02');
             if (!scene || typeof gsap === 'undefined') return;
@@ -1209,19 +1262,26 @@
             const words = scene.querySelectorAll('.evo-word');
             const copy = document.getElementById('scene-02-copy');
             const tapeItems = scene.querySelectorAll('.neural-tape-item');
+            const tapeMobileBoxes = scene.querySelectorAll('.neural-tape-mobile-box');
             const isMobile = window.innerWidth < 768;
             if (!words.length || !copy) return;
+
+            window.__scene02TapeIsMobile = isMobile;
 
             // Initial state: words slightly below and invisible
             gsap.set(words, { y: 16, opacity: 0 });
 
-            // Neural Latency Tape: desktop = slide from bottom (y: 60); mobile = left from top (y: -20), right from bottom (y: 20)
-            tapeItems.forEach(function(el) {
-                const isRight = el.closest('.neural-tape-right');
-                if (isMobile && isRight) gsap.set(el, { y: 20, opacity: 0 });
-                else if (isMobile) gsap.set(el, { y: -20, opacity: 0 });
-                else gsap.set(el, { y: 60, opacity: 0 });
-            });
+            // Desktop: tape items slide from bottom
+            if (!isMobile) {
+                tapeItems.forEach(function(el) {
+                    gsap.set(el, { y: 60, opacity: 0 });
+                });
+            }
+
+            // Mobile: sliding boxes start off-screen right (CSS already sets translateX(120%))
+            if (isMobile && tapeMobileBoxes.length) {
+                gsap.set(tapeMobileBoxes, { x: '120%', opacity: 0 });
+            }
 
             // Evolution + copy timeline — triggered at 19%
             const evolutionTl = gsap.timeline({
@@ -1236,12 +1296,19 @@
             });
             evolutionTl.to(copy, { opacity: 1, duration: 0.8 }, '+=0.1');
 
-            // Neural Latency Tape timeline — triggered at 22%
+            // Neural Latency Tape timeline — desktop: stagger in; mobile: sliding boxes at 23%, then auto-run sequence
             const tapeTl = gsap.timeline({
                 paused: true,
                 defaults: { ease: 'power2.out' }
             });
-            if (tapeItems.length) {
+            if (isMobile && tapeMobileBoxes.length) {
+                tapeTl.to(tapeMobileBoxes, {
+                    x: 0,
+                    opacity: 1,
+                    duration: 0.45,
+                    stagger: 0.25
+                });
+            } else if (tapeItems.length) {
                 tapeTl.to(tapeItems, {
                     y: 0,
                     opacity: 1,
