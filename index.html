@@ -507,92 +507,113 @@
 
 
 
-        <section id="scene-02" class="scene bg-primary/10">
-            <div id="scene-02-track" class="flex p-1 gap-1 h-full">
+        <!-- Scene 02 now: Portfolio intro with animated headline -->
+        <section id="scene-02" class="scene flex items-center justify-center border border-primary/30 bg-black">
+            <div class="max-w-2xl mx-auto px-6 text-center">
+                <!-- Evolution line: each word gets its own span -->
+                <h2
+                    id="scene-02-evolution"
+                    class="text-3xl md:text-4xl font-bold font-display tracking-tight text-white mb-4"
+                >
+                    <span class="evo-word inline-block">Evolution</span>
+                    <span class="evo-word inline-block">Prioritizes</span>
+                    <span class="evo-word inline-block">Motion</span>
+                </h2>
 
-            <div class="interior-panel w-1/3 p-8 justify-center group bg-primary/5 hover:bg-primary/10 transition-colors">
-
-                <div class="absolute top-4 right-4 text-accent font-mono text-xl">+</div>
-
-                <div class="flex items-center gap-2 mb-6">
-
-                    <span class="w-2 h-2 bg-accent rounded-full shadow-[0_0_8px_#ccff00]"></span>
-
-                    <span class="font-mono text-[10px] text-gray-500 uppercase">NODE.01 // SPEED</span>
-
-                </div>
-
-                <h3 class="text-4xl font-bold tracking-tight mb-4 text-white">Velocity</h3>
-
-                <p class="font-mono text-[11px] text-gray-400 leading-relaxed">Rendering at the speed of thought. Zero latency architecture.</p>
-
+                <!-- Copy block that fades in after the line finishes -->
+                <p
+                    id="scene-02-copy"
+                    class="font-mono text-[11px] md:text-sm text-gray-400 leading-relaxed max-w-xl mx-auto"
+                    style="opacity: 0;"
+                >
+                    Static brands are forgotten. Because the human eye tracks movement 7x to 20x more efficiently than static imagery,
+                    interactive experiences are imprinted. We command focus—extending every second spent on-site by compelling the
+                    subconscious to ignore the noise and lock onto the signal.
+                </p>
             </div>
-
-            
-
-            <div class="interior-panel w-1/3 p-8 justify-center bg-black">
-
-                <div class="absolute top-4 right-4 text-primary font-mono text-xl">⌝</div>
-
-                <div class="flex items-center gap-2 mb-6">
-
-                    <span class="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_#3c00ff]"></span>
-
-                    <span class="font-mono text-[10px] text-gray-500 uppercase">NODE.02 // IMPACT</span>
-
-                </div>
-
-                <h3 class="text-4xl font-bold tracking-tight mb-4 text-white">Resonance</h3>
-
-                <p class="font-mono text-[11px] text-gray-400 leading-relaxed">Visual frequencies that align with user intent.</p>
-
-            </div>
-
-
-
-            <div class="interior-panel w-1/3">
-
-                <div class="interior-header"><span>03_PHYSICS_ENGINE.INIT</span><span class="text-accent">ACTIVE</span></div>
-
-                <div class="flex flex-col h-full divide-y divide-primary/20">
-
-                    <div class="flex-1 flex flex-col items-center justify-center p-4">
-
-                        <div class="w-8 h-8 border border-primary rotate-45 mb-4"></div>
-
-                        <span class="font-mono text-[9px] text-gray-600">OBJ: FLUID_DYNAMICS</span>
-
-                    </div>
-
-                    <div class="flex-1 flex flex-col items-center justify-center p-4">
-
-                        <div class="w-10 h-10 rounded-full border border-accent mb-4"></div>
-
-                        <span class="font-mono text-[9px] text-gray-600">OBJ: LIGHT_REFRACTION</span>
-
-                    </div>
-
-                    <div class="flex-1 flex flex-col items-center justify-center p-4">
-
-                        <div class="w-10 h-10 border-t border-primary rounded-t-full mb-4"></div>
-
-                        <span class="font-mono text-[9px] text-gray-600">OBJ: GRAVITY_WELL</span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            </div> <!-- close scene-02-track -->
         </section>
 
 
 
-        <section id="scene-03" class="scene flex items-center justify-center border border-primary/30">
+        <!-- Scene 03 now: Velocity / Resonance track moved down -->
+        <section id="scene-03" class="scene bg-primary/10">
+            <div id="scene-02-track" class="flex p-1 gap-1 h-full">
 
-            <h2 class="font-mono text-2xl text-primary/50">SECTION 03 // PORTFOLIO INIT</h2>
+                <div class="interior-panel w-1/3 p-8 justify-center group bg-primary/5 hover:bg-primary/10 transition-colors">
 
+                    <div class="absolute top-4 right-4 text-accent font-mono text-xl">+</div>
+
+                    <div class="flex items-center gap-2 mb-6">
+
+                        <span class="w-2 h-2 bg-accent rounded-full shadow-[0_0_8px_#ccff00]"></span>
+
+                        <span class="font-mono text-[10px] text-gray-500 uppercase">NODE.01 // SPEED</span>
+
+                    </div>
+
+                    <h3 class="text-4xl font-bold tracking-tight mb-4 text-white">Velocity</h3>
+
+                    <p class="font-mono text-[11px] text-gray-400 leading-relaxed">Rendering at the speed of thought. Zero latency architecture.</p>
+
+                </div>
+
+
+
+                <div class="interior-panel w-1/3 p-8 justify-center bg-black">
+
+                    <div class="absolute top-4 right-4 text-primary font-mono text-xl">⌝</div>
+
+                    <div class="flex items-center gap-2 mb-6">
+
+                        <span class="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_#3c00ff]"></span>
+
+                        <span class="font-mono text-[10px] text-gray-500 uppercase">NODE.02 // IMPACT</span>
+
+                    </div>
+
+                    <h3 class="text-4xl font-bold tracking-tight mb-4 text-white">Resonance</h3>
+
+                    <p class="font-mono text-[11px] text-gray-400 leading-relaxed">Visual frequencies that align with user intent.</p>
+
+                </div>
+
+
+
+                <div class="interior-panel w-1/3">
+
+                    <div class="interior-header"><span>03_PHYSICS_ENGINE.INIT</span><span class="text-accent">ACTIVE</span></div>
+
+                    <div class="flex flex-col h-full divide-y divide-primary/20">
+
+                        <div class="flex-1 flex flex-col items-center justify-center p-4">
+
+                            <div class="w-8 h-8 border border-primary rotate-45 mb-4"></div>
+
+                            <span class="font-mono text-[9px] text-gray-600">OBJ: FLUID_DYNAMICS</span>
+
+                        </div>
+
+                        <div class="flex-1 flex flex-col items-center justify-center p-4">
+
+                            <div class="w-10 h-10 rounded-full border border-accent mb-4"></div>
+
+                            <span class="font-mono text-[9px] text-gray-600">OBJ: LIGHT_REFRACTION</span>
+
+                        </div>
+
+                        <div class="flex-1 flex flex-col items-center justify-center p-4">
+
+                            <div class="w-10 h-10 border-t border-primary rounded-t-full mb-4"></div>
+
+                            <span class="font-mono text-[9px] text-gray-600">OBJ: GRAVITY_WELL</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div> <!-- close scene-02-track -->
         </section>
 
 
@@ -1050,6 +1071,51 @@
             }, { passive: true });
 
             measure();
+        })();
+
+        // ===== SCENE 02: Evolution line (per-word slide-in) + copy fade-in =====
+        (function() {
+            const scene = document.getElementById('scene-02');
+            if (!scene || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+            const words = scene.querySelectorAll('.evo-word');
+            const copy = document.getElementById('scene-02-copy');
+            if (!words.length || !copy) return;
+
+            // Initial state: words slightly below and invisible
+            gsap.set(words, { y: 16, opacity: 0 });
+
+            const tl = gsap.timeline({
+                paused: true,
+                defaults: { ease: 'power2.out' }
+            });
+
+            // 1) Words slide up & fade in, one after another, with a brief hang
+            tl.to(words, {
+                y: 0,
+                opacity: 1,
+                duration: 0.45,
+                stagger: 0.22 // slower cadence so each word hangs for a moment
+            });
+
+            // 2) After last word, fade in the paragraph in place (no motion)
+            tl.to(
+                copy,
+                {
+                    opacity: 1,
+                    duration: 0.8
+                },
+                '+=0.1' // tiny pause after last word
+            );
+
+            // Trigger when Scene 02 is active in the pinned stack
+            ScrollTrigger.create({
+                trigger: scene,
+                start: 'top center',
+                end: 'bottom center',
+                onEnter: () => tl.play(),
+                once: true
+            });
         })();
 
         // ===== VELOCITY + COORDINATES HUD =====
