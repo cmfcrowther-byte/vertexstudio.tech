@@ -92,7 +92,7 @@
 
         .hud-top { @apply fixed top-0 left-0 w-full h-10 border-b border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
 
-        .hud-bottom { @apply fixed bottom-0 left-0 w-full h-10 border-t border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
+        .hud-bottom { @apply fixed bottom-0 left-0 w-full min-h-10 border-t border-primary/40 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-6 font-mono text-[10px] text-gray-500 tracking-widest uppercase; }
 
         .hud-left { @apply fixed top-10 left-0 w-14 h-[calc(100vh-80px)] border-r border-primary/40 bg-black/80 z-50 flex flex-col items-center justify-center; }
 
@@ -120,11 +120,11 @@
 
             height: 100vh;
 
-            /* Padding accommodates the fixed HUD */
+            /* Padding accommodates the fixed HUD + section tagline strip */
 
             padding-top: 40px; 
 
-            padding-bottom: 40px;
+            padding-bottom: 64px;
 
             padding-left: 56px;
 
@@ -148,7 +148,7 @@
 
             width: calc(100% - 56px);
 
-            height: calc(100vh - 80px);
+            height: calc(100vh - 104px);
 
             background-color: #050505;
 
@@ -212,27 +212,36 @@
             .hud-left {
                 display: none !important;
             }
-            /* HUD bars: content closer to frame edges, taller for breathing room */
-            .hud-top, .hud-bottom {
+            /* HUD bars */
+            .hud-top {
                 height: 2rem !important;
                 padding-left: 0.5rem !important;
                 padding-right: 0.5rem !important;
             }
-            /* Viewport: svh for stable layout when URL bar visible */
+            .hud-bottom {
+                height: auto !important;
+                min-height: 2rem !important;
+                padding: 0 0.5rem 0.5rem !important;
+            }
+            #section-tagline {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            /* Viewport: svh, extra padding for tagline strip */
             #viewport-container {
                 height: 100vh !important;
                 height: 100svh !important;
                 padding-left: 0 !important;
                 padding-top: 32px !important;
-                padding-bottom: 32px !important;
+                padding-bottom: 5rem !important;
             }
-            /* Scenes: full width, adjusted for HUDs */
+            /* Scenes: height accounts for header + footer with tagline */
             .scene {
                 left: 0 !important;
                 width: 100% !important;
                 top: 32px !important;
-                height: calc(100vh - 64px) !important;
-                height: calc(100svh - 64px) !important;
+                height: calc(100vh - 7rem) !important;
+                height: calc(100svh - 7rem) !important;
             }
             /* Scene 01: stretch to fill viewport gap between header/footer */
             #scene-01 {
@@ -385,12 +394,12 @@
 
 
 
-    <footer class="hud-bottom">
-
-        <div class="flex gap-4"><span id="scroll-tracker">SCROLL // 0%</span></div>
-
-        <div class="flex gap-4 text-right"><span id="scene-tracker" class="text-accent tracking-[0.5em]">SCENE // 01 / 06</span></div>
-
+    <footer class="hud-bottom flex-col">
+        <div id="section-tagline" class="w-full flex items-center justify-center font-mono text-[10px] tracking-[0.2em] uppercase shrink-0 py-2 md:py-1.5 border-b border-primary/30 text-white" style="color: #ffffff;">GEOMETRY-DRIVEN // RESOLUTION-AGNOSTIC</div>
+        <div class="flex gap-4 justify-between items-center w-full">
+            <span id="scroll-tracker">SCROLL // 0%</span>
+            <span id="scene-tracker" class="text-accent tracking-[0.5em]">SCENE // 01 / 06</span>
+        </div>
     </footer>
 
 
