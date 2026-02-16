@@ -958,14 +958,15 @@
         ScrollTrigger.addEventListener("refresh", updateHudTrackers);
         updateHudTrackers();
 
-        // ===== MOBILE: tagline appears once when URL bar is basically gone (no following movement), centered in the gap =====
+        // ===== MOBILE: tagline appears once when URL bar is basically gone (no following movement), centered in the gap with slight upward bias =====
         (function() {
             const el = document.getElementById('urlbar-reveal-tagline');
             if (!el) return;
-            const THRESHOLD = 40;   // how much extra viewport height before we show it
-            const BAR_HEIGHT = 24;  // fixed bar height so text is nicely sized
+            const THRESHOLD = 40;    // how much extra viewport height before we show it
+            const BAR_HEIGHT = 24;   // fixed bar height so text is nicely sized
+            const EXTRA_OFFSET = 12; // additional upward shift inside the gap
             let minHeightSeen = Infinity;
-            let activated = false;  // once true, we never move the text again
+            let activated = false;   // once true, we never move the text again
 
             function measure() {
                 const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -986,8 +987,9 @@
 
                 // Wait until the gap is "big enough" (URL bar mostly hidden)
                 if (gap >= THRESHOLD) {
-                    // Place a fixed-height bar vertically centered within the revealed gap above the footer
-                    const offset = Math.max(0, (gap - BAR_HEIGHT) / 2);
+                    // Place a fixed-height bar vertically centered within the revealed gap above the footer,
+                    // then nudge it slightly upward so it feels visually centered
+                    const offset = Math.max(0, (gap - BAR_HEIGHT) / 2 + EXTRA_OFFSET);
                     el.style.height = BAR_HEIGHT + 'px';
                     el.style.bottom = `calc(2rem + ${offset}px)`;
                     el.style.overflow = 'visible';
