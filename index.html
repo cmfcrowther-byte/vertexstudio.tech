@@ -1018,6 +1018,19 @@
             }
             window.addEventListener('resize', measure);
             window.addEventListener('load', measure);
+
+            // Hide + reset tagline when user scrolls back near the top,
+            // so it doesn't sit over the velocity/coords boxes.
+            window.addEventListener('scroll', () => {
+                if (window.scrollY < 50) {
+                    el.style.height = '0px';
+                    el.style.overflow = 'hidden';
+                    el.style.bottom = '2rem';
+                    activated = false;
+                    minHeightSeen = Infinity;
+                }
+            }, { passive: true });
+
             measure();
         })();
 
