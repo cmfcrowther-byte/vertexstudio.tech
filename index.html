@@ -499,7 +499,7 @@
             .neural-tape-right {
                 display: none !important;
             }
-            /* Scene 02 Mobile: sliding container boxes at bottom (trigger 23%) */
+            /* Scene 02 Mobile: sliding container boxes at bottom (trigger 25%) */
             .neural-tape-mobile {
                 display: flex !important;
                 position: absolute;
@@ -727,7 +727,7 @@
         <!-- Scene 02 now: Portfolio intro with animated headline + diagnostics (desktop: boxes under copy; mobile: sliding boxes at bottom) -->
         <section id="scene-02" class="scene flex items-center justify-center border border-primary/30 bg-black">
             <div id="scene-02-inner" class="w-full h-full">
-            <!-- Mobile only: three rows of sliding container boxes at bottom (trigger 23%, then auto-run) -->
+            <!-- Mobile only: three rows of sliding container boxes at bottom (trigger 25%, then auto-run) -->
             <div class="neural-tape-mobile" aria-hidden="true">
                 <div class="neural-tape-mobile-track">
                     <div class="neural-tape-mobile-row">
@@ -890,20 +890,40 @@
                                     d="m 325.29756,47.972546 0.2557,124.006534 5.9299,14.18475 -7.0232,57.25824"
                                     style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:1.5875, 1.5875;stroke-dashoffset:0;stroke-opacity:1"
                                 />
+                                <!-- Diamond 1: down then up (exact segments from SVG) -->
                                 <path
-                                    d="m 324.75536,173.222 5.1284,13.45313 c 0,0 -3.1433,33.59429 -5.2601,49.821 l -5.4416,-49.65729 z"
+                                    d="m 324.90678,173.22832 4.97698,13.44681 c 0,0 -2.94776,33.61685 -5.06456,49.84356"
                                     style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
                                 />
                                 <path
-                                    d="m 324.72886,176.61402 3.6369,10.45593 c 0,0 -1.7953,27.61426 -3.728,42.39329 l -3.8053,-42.31831 z"
+                                    d="m 324.5533,236.51869 -5.28366,-49.6627 5.44946,-13.60646"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <!-- Diamond 2 -->
+                                <path
+                                    d="m 324.92942,176.64019 3.43634,10.42976 c 0,0 -1.60176,27.65577 -3.53446,42.4348"
                                     style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
                                 />
                                 <path
-                                    d="m 324.71126,180.07989 2.2564,7.29682 c 0,0 -0.9086,21.13209 -2.2477,32.72927 l -2.4297,-32.76806 z"
+                                    d="m 324.63159,229.50475 -3.78725,-42.32823 3.8964,-10.53091"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <!-- Diamond 3 -->
+                                <path
+                                    d="m 324.96948,180.1011 1.99818,7.27561 c 0,0 -0.74615,21.16819 -2.08525,32.76537"
                                     style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
                                 />
                                 <path
-                                    d="m 324.71526,184.02816 0.9307,3.43171 c 0,0 0.4131,8.76303 -0.926,20.36021 l -0.899,-20.37731 z"
+                                    d="m 324.68168,220.11948 -2.30435,-32.7816 2.29615,-7.26615"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <!-- Diamond 4 -->
+                                <path
+                                    d="m 324.89125,184.01507 0.75471,3.4448 c 0,0 0.57154,8.78604 -0.76756,20.38322"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 324.62652,207.82819 -0.79271,-20.38543 0.75692,-3.43717"
                                     style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
                                 />
                             </g>
@@ -1391,19 +1411,24 @@
                 taglineEl.textContent = taglines[sceneNum] || 'GEOMETRY-DRIVEN 01';
             }
 
-            // Scene 02: Evolution + copy at 19%; Neural Tape desktop 22% / mobile 23%
+            // Scene 02: Evolution 19%; Tape + Eye (peripheral) at 25%; Focus at 27% (scroll-only, no auto switch)
             if (window.__scene02Tl && !window.__scene02EvolutionPlayed) {
                 if (pct >= 19 && pct < 60) {
                     window.__scene02Tl.play();
                     window.__scene02EvolutionPlayed = true;
                 }
             }
-            var tapeThreshold = window.__scene02TapeIsMobile ? 23 : 22;
+            var tapeThreshold = 25;
             if (window.__scene02TapeTl && !window.__scene02TapePlayed) {
                 if (pct >= tapeThreshold && pct < 60) {
                     window.__scene02TapeTl.play();
                     window.__scene02TapePlayed = true;
                 }
+            }
+            // Focus animation only when user scrolls down to 27% (no automatic switch from peripheral)
+            if (pct >= 27 && window.__scene02FocusPlayed === false && typeof window.__scene02DoFocusTransition === 'function') {
+                window.__scene02FocusPlayed = true;
+                window.__scene02DoFocusTransition();
             }
         }
         masterTl.eventCallback("onUpdate", updateHudTrackers);
@@ -1475,7 +1500,7 @@
             measure();
         })();
 
-        // ===== SCENE 02: Evolution + copy (19%) | Neural Tape + Eye desktop 22% / mobile 23% sliding boxes =====
+        // ===== SCENE 02: Evolution + copy (19%) | Neural Tape + Eye at 25% (focus only after scroll to 25%) =====
         (function() {
             const scene = document.getElementById('scene-02');
             if (!scene || typeof gsap === 'undefined') return;
@@ -1486,6 +1511,7 @@
             const tapeMobileBoxes = scene.querySelectorAll('.neural-tape-mobile-box');
             const tapeDesktopTitle = scene.querySelector('.neural-tape-desktop-title');
             // Eye elements (desktop only)
+            const eyeContainer = scene.querySelector('#scene-02-eye');
             const peripheralGroup = scene.querySelector('#Peripheral');
             const focusGroup = scene.querySelector('#Focus');
             const peripheralData = scene.querySelector('#PeripheralData');
@@ -1501,8 +1527,8 @@
             gsap.set(words, { y: 16, opacity: 0 });
 
             // Desktop: title hidden until boxes start; tape items + eye layers initial state
-            let peripheralFlowTl = null;
-            let focusFlowTl = null;
+            let peripheralFlowTweens = [];
+            let focusFlowTweens = [];
             let peripheralPulseTl = null;
             let focusPulseTl = null;
 
@@ -1512,47 +1538,93 @@
                     gsap.set(el, { y: 60, opacity: 0 });
                 });
 
+                // Eye container hidden until peripheral starts (same moment)
+                if (eyeContainer) gsap.set(eyeContainer, { autoAlpha: 0 });
                 // Eye groups hidden initially
                 if (peripheralGroup) gsap.set(peripheralGroup, { autoAlpha: 0 });
                 if (focusGroup) gsap.set(focusGroup, { autoAlpha: 0 });
 
-                // Peripheral data: keep dashed pattern from SVG and scroll offset continuously
+                // Peripheral data: split into subpaths and animate each so all flow downward
                 if (peripheralData) {
-                    peripheralFlowTl = gsap.timeline({ repeat: -1, paused: true });
-                    peripheralFlowTl.to(peripheralData, {
-                        strokeDashoffset: "-=80",
-                        duration: 2.5,
-                        ease: "none"
+                    var d = peripheralData.getAttribute("d").trim();
+                    var segmentStarts = d.split(/(?=\s[mM]\s)/);
+                    var segments = segmentStarts.map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+                    var pathEls = [];
+                    var prevEnd = null;
+                    var style = peripheralData.getAttribute("style") || "";
+                    var parent = peripheralData.parentNode;
+                    for (var i = 0; i < segments.length; i++) {
+                        var segD = segments[i];
+                        if (i > 0) {
+                            var m = segD.match(/^([mM])\s*([-\d.]+)\s*,\s*([-\d.]+)\s*([\s\S]*)$/);
+                            if (m) {
+                                var ax, ay;
+                                if (m[1] === "M") {
+                                    ax = parseFloat(m[2]);
+                                    ay = parseFloat(m[3]);
+                                } else {
+                                    ax = (prevEnd ? prevEnd.x : 0) + parseFloat(m[2]);
+                                    ay = (prevEnd ? prevEnd.y : 0) + parseFloat(m[3]);
+                                }
+                                segD = "M " + ax + "," + ay + " " + m[4].trim();
+                            }
+                        }
+                        var tempPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                        tempPath.setAttribute("d", segD);
+                        prevEnd = tempPath.getPointAtLength(tempPath.getTotalLength());
+                        var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                        p.setAttribute("d", segD);
+                        p.setAttribute("style", style);
+                        parent.insertBefore(p, peripheralData);
+                        pathEls.push(p);
+                    }
+                    peripheralData.remove();
+                    // One independent tween per path (no timeline repeat) so flow is continuous with no stutter
+                    pathEls.forEach(function(path, i) {
+                        var len = path.getTotalLength();
+                        var start = path.getPointAtLength(0);
+                        var end = path.getPointAtLength(len);
+                        var flowDown = end.y > start.y;
+                        var tween = gsap.to(path, {
+                            strokeDashoffset: flowDown ? "-=80" : "+=80",
+                            duration: 2.5 + i * 0.05,
+                            ease: "none",
+                            repeat: -1,
+                            paused: true
+                        });
+                        peripheralFlowTweens.push(tween);
                     });
                 }
 
-                // Focus data flowing loop (subtle, continuous drift; started once and never paused)
+                // Focus data: one tween per path; direction per path so all stream toward bottom (receptors)
                 if (focusDataGroup) {
                     const focusPaths = focusDataGroup.querySelectorAll('path');
-                    if (focusPaths.length) {
-                        focusFlowTl = gsap.timeline({
+                    focusPaths.forEach(function(path, i) {
+                        var len = path.getTotalLength();
+                        var start = path.getPointAtLength(0);
+                        var end = path.getPointAtLength(len);
+                        var flowDown = end.y > start.y;
+                        var tween = gsap.to(path, {
+                            strokeDashoffset: flowDown ? "-=80" : "+=80",
+                            duration: 2.5 + i * 0.1,
+                            ease: "none",
                             repeat: -1,
-                            paused: true,
-                            defaults: { ease: "none" }
+                            paused: true
                         });
-                        focusFlowTl.to(focusPaths, {
-                            strokeDashoffset: "-=48",
-                            duration: 2.4,
-                            stagger: 0.06
-                        });
-                    }
+                        focusFlowTweens.push(tween);
+                    });
                 }
 
-                // Receptor pulses: glow only (no scale change)
+                // Receptor pulses: pronounced glow only (no size change)
                 if (peripheralReceptors) {
                     peripheralPulseTl = gsap.timeline({ repeat: -1, yoyo: true, paused: true });
                     peripheralPulseTl.fromTo(
                         peripheralReceptors,
-                        { filter: "drop-shadow(0 0 0 rgba(204,255,0,0))" },
+                        { filter: "drop-shadow(0 0 0 rgba(212,255,0,0))" },
                         {
-                            filter: "drop-shadow(0 0 10px rgba(204,255,0,1))",
-                            duration: 0.8,
-                            ease: "sine.inOut"
+                            filter: "drop-shadow(0 0 8px rgba(212,255,0,1)) drop-shadow(0 0 24px rgba(212,255,0,0.9)) drop-shadow(0 0 48px rgba(212,255,0,0.7))",
+                            duration: 1.4,
+                            ease: "power2.out"
                         }
                     );
                 }
@@ -1560,11 +1632,11 @@
                     focusPulseTl = gsap.timeline({ repeat: -1, yoyo: true, paused: true });
                     focusPulseTl.fromTo(
                         focusReceptors,
-                        { filter: "drop-shadow(0 0 0 rgba(204,255,0,0))" },
+                        { filter: "drop-shadow(0 0 0 rgba(212,255,0,0))" },
                         {
-                            filter: "drop-shadow(0 0 12px rgba(204,255,0,1))",
-                            duration: 0.8,
-                            ease: "sine.inOut"
+                            filter: "drop-shadow(0 0 10px rgba(212,255,0,1)) drop-shadow(0 0 28px rgba(212,255,0,0.95)) drop-shadow(0 0 56px rgba(212,255,0,0.75))",
+                            duration: 1.5,
+                            ease: "power2.out"
                         }
                     );
                 }
@@ -1588,7 +1660,7 @@
             });
             evolutionTl.to(copy, { opacity: 1, duration: 0.8 }, '+=0.1');
 
-            // Neural Latency Tape + Eye timeline — desktop: stagger in; mobile: sliding boxes at 23%, then auto-run sequence
+            // Neural Latency Tape + Eye timeline — trigger at 25% scroll; desktop: stagger in + eye when peripheral starts; mobile: sliding boxes
             const tapeTl = gsap.timeline({
                 paused: true,
                 defaults: { ease: 'power2.out' }
@@ -1611,31 +1683,29 @@
                     stagger: 0.15
                 }, 0);
 
-                // Eye: peripheral phase starts shortly after boxes begin
+                // Eye: show container + peripheral at the same moment (eye not visible until now)
                 if (!isMobile && peripheralGroup) {
                     tapeTl.add(() => {
+                        if (eyeContainer) gsap.to(eyeContainer, { autoAlpha: 1, duration: 0.4 });
                         gsap.to(peripheralGroup, { autoAlpha: 1, duration: 0.4 });
-                        if (peripheralFlowTl) peripheralFlowTl.play();
+                        peripheralFlowTweens.forEach(function(t) { t.play(); });
                         if (peripheralPulseTl) peripheralPulseTl.play();
                     }, 0.1);
                 }
 
-                // Eye: transition from peripheral → focus later in the same scroll band
+                // Focus phase is NOT on the timeline — triggered only at 27% scroll (see updateHudTrackers)
                 if (!isMobile && peripheralGroup && focusGroup) {
-                    // Stop peripheral loops, fade out, fade focus in
-                    tapeTl.add(() => {
-                        if (peripheralFlowTl) peripheralFlowTl.pause();
+                    window.__scene02DoFocusTransition = function() {
+                        peripheralFlowTweens.forEach(function(t) { t.pause(); });
                         if (peripheralPulseTl) peripheralPulseTl.pause();
-                    }, 4.2);
-
-                    tapeTl.to(peripheralGroup, { autoAlpha: 0, duration: 0.6 }, 4.2);
-                    tapeTl.to(focusGroup, { autoAlpha: 1, duration: 0.6 }, 4.2);
-
-                    // Start focus loops slightly after fade
-                    tapeTl.add(() => {
-                        if (focusFlowTl) focusFlowTl.play();
-                        if (focusPulseTl) focusPulseTl.play();
-                    }, 5.0);
+                        var crossfade = gsap.timeline();
+                        crossfade.to(peripheralGroup, { autoAlpha: 0, duration: 3.5, ease: "power2.inOut" }, 0);
+                        crossfade.to(focusGroup, { autoAlpha: 1, duration: 3.5, ease: "power2.inOut" }, 0);
+                        crossfade.add(function() {
+                            focusFlowTweens.forEach(function(t) { t.play(); });
+                            if (focusPulseTl) focusPulseTl.play();
+                        }, 0);
+                    };
                 }
             }
 
@@ -1643,6 +1713,7 @@
             window.__scene02EvolutionPlayed = false;
             window.__scene02TapeTl = tapeTl;
             window.__scene02TapePlayed = false;
+            window.__scene02FocusPlayed = false;
         })();
 
         // ===== VELOCITY + COORDINATES HUD =====
