@@ -110,9 +110,51 @@
             transform-origin: bottom center;
         }
 
-        /* ========== SCENE 02: Neural Latency Tape (vertical HUD lines) ========== */
-        #scene-02-inner { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        .neural-tape {
+        /* ========== SCENE 02: Neural Latency Tape + Eye diagram ========== */
+        #scene-02-inner { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        @media (min-width: 768px) {
+            /* Desktop: keep column layout for center content; overlay eye on the right so boxes keep full width */
+            #scene-02-inner {
+                align-items: stretch;
+                justify-content: flex-start;
+                flex-direction: column;
+            }
+            #scene-02-center {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #scene-02-headline-wrap {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 0;
+            }
+            #scene-02-eye {
+                position: absolute;
+                right: 3rem;
+                top: 2%;
+                width: 36%;
+                max-width: 460px;
+                display: block;
+                z-index: 20;
+            }
+            #scene-02-eye svg {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+        }
+        /* Desktop: vertical strips hidden; use box layout under evolution instead */
+        @media (min-width: 768px) {
+            .neural-tape-left,
+            .neural-tape-right { display: none !important; }
+        }
+        .neural-tape { /* legacy: left/right strips (hidden on desktop) */
             position: absolute;
             top: 0;
             bottom: 0;
@@ -152,6 +194,55 @@
         }
         .neural-tape-item .tape-main { color: rgba(204, 255, 0, 0.9); font-weight: 600; }
         .neural-tape-item .tape-sub { color: rgba(156, 163, 175, 0.8); font-size: 9px; letter-spacing: 0.08em; }
+        /* Desktop only: diagnostics block under evolution (title + 6 boxes) */
+        .neural-tape-desktop {
+            display: none;
+        }
+        @media (min-width: 768px) {
+            #scene-02-center { max-width: 84rem; width: 100%; }
+            .neural-tape-desktop {
+                display: block !important;
+                width: 100%;
+                max-width: 100%;
+                margin-top: auto;
+                margin-bottom: 1rem;
+            }
+            .neural-tape-desktop-title {
+                width: 100%;
+                border: 1px solid rgba(60, 0, 255, 0.5);
+                background: rgba(0, 0, 0, 0.85);
+                padding: 0.5rem 0.75rem;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10px;
+                letter-spacing: 0.15em;
+                color: rgba(204, 255, 0, 0.9);
+                text-transform: uppercase;
+                text-align: left;
+                margin-bottom: 0.5rem;
+                box-sizing: border-box;
+            }
+            .neural-tape-desktop-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+            .neural-tape-desktop .neural-tape-item {
+                border: 1px solid rgba(60, 0, 255, 0.5);
+                background: rgba(0, 0, 0, 0.85);
+                padding: 0.5rem 0.6rem;
+                text-align: left;
+                white-space: normal;
+                min-height: 3rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                box-sizing: border-box;
+            }
+            .neural-tape-desktop .neural-tape-item .tape-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        }
+        @media (max-width: 767px) {
+            .neural-tape-desktop { display: none !important; }
+        }
 
         /* Master container that gets pinned */
 
@@ -633,43 +724,9 @@
 
 
 
-        <!-- Scene 02 now: Portfolio intro with animated headline + Neural Latency Tape -->
+        <!-- Scene 02 now: Portfolio intro with animated headline + diagnostics (desktop: boxes under copy; mobile: sliding boxes at bottom) -->
         <section id="scene-02" class="scene flex items-center justify-center border border-primary/30 bg-black">
             <div id="scene-02-inner" class="w-full h-full">
-            <!-- Left vertical HUD line: Neural Latency Tape -->
-            <div class="neural-tape neural-tape-left" aria-hidden="true">
-                <div class="neural-tape-items">
-                    <div class="neural-tape-item">
-                        <span class="tape-main">RECOGNITION // 13MS</span><br/>
-                        <span class="tape-sub">MINIMUM_PERCEPTION_TIME</span>
-                    </div>
-                    <div class="neural-tape-item">
-                        <span class="tape-main">REACTION // 150MS</span><br/>
-                        <span class="tape-sub">HUMAN_RESPONSE_TIME</span>
-                    </div>
-                    <div class="neural-tape-item">
-                        <span class="tape-main">RETINAL_SENSORS // 90M</span><br/>
-                        <span class="tape-sub">KINETIC_INPUT_NODES</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Right vertical HUD line: Neural Latency Tape -->
-            <div class="neural-tape neural-tape-right" aria-hidden="true">
-                <div class="neural-tape-items">
-                    <div class="neural-tape-item">
-                        <span class="tape-main">TUNNEL_VISION // 02%</span><br/>
-                        <span class="tape-sub">PERIPHERAL_BLIND_SPOT_98%</span>
-                    </div>
-                    <div class="neural-tape-item">
-                        <span class="tape-main">DATA_SPEED // 60,000X</span><br/>
-                        <span class="tape-sub">VISUAL_VS_TEXT_PROCESSING</span>
-                    </div>
-                    <div class="neural-tape-item">
-                        <span class="tape-main">RETENTION_RATE // 95%</span><br/>
-                        <span class="tape-sub">VISUAL_MEMORY_EFFICIENCY</span>
-                    </div>
-                </div>
-            </div>
             <!-- Mobile only: three rows of sliding container boxes at bottom (trigger 23%, then auto-run) -->
             <div class="neural-tape-mobile" aria-hidden="true">
                 <div class="neural-tape-mobile-track">
@@ -705,11 +762,12 @@
                     </div>
                 </div>
             </div>
-            <div class="max-w-2xl mx-auto px-6 text-center relative z-10 flex-shrink-0">
+            <div id="scene-02-center" class="max-w-2xl mx-auto px-6 relative z-10 flex-shrink-0 flex flex-col items-center">
+                <div id="scene-02-headline-wrap" class="flex flex-col items-start w-full">
                 <!-- Evolution line: each word gets its own span -->
                 <h2
                     id="scene-02-evolution"
-                    class="text-3xl md:text-4xl font-bold font-display tracking-tight text-white mb-4"
+                    class="text-3xl md:text-4xl font-bold font-display tracking-tight text-white mb-4 text-left"
                 >
                     <span class="evo-word inline-block">Evolution</span>
                     <span class="evo-word inline-block">Prioritizes</span>
@@ -719,13 +777,145 @@
                 <!-- Copy block that fades in after the line finishes -->
                 <p
                     id="scene-02-copy"
-                    class="font-mono text-[11px] md:text-sm text-gray-400 leading-relaxed max-w-xl mx-auto"
+                    class="font-mono text-[11px] md:text-sm text-gray-400 leading-relaxed max-w-xl text-left w-full"
                     style="opacity: 0;"
                 >
                     Static brands are forgotten. Because the human eye tracks movement 7x to 20x more efficiently than static imagery,
                     interactive experiences are imprinted. We command focus—extending every second spent on-site by compelling the
                     subconscious to ignore the noise and lock onto the signal.
                 </p>
+                </div>
+
+                <!-- Desktop only: full-width title + 6 container boxes, pinned just above footer -->
+                <div class="neural-tape-desktop" aria-hidden="true">
+                    <div class="neural-tape-desktop-title">BIOLOGICAL_INTERFACE_DIAGNOSTICS</div>
+                    <div class="neural-tape-desktop-grid">
+                        <!-- Top row: labels that connect to the eye -->
+                        <div class="neural-tape-item">
+                            <span class="tape-main">RETINAL_SENSORS // 90M</span>
+                            <span class="tape-sub">KINETIC_INPUT_NODES</span>
+                        </div>
+                        <div class="neural-tape-item">
+                            <span class="tape-main">TUNNEL_VISION // 02%</span>
+                            <span class="tape-sub">PERIPHERAL_BLIND_SPOT_98%</span>
+                        </div>
+                        <div class="neural-tape-item">
+                            <span class="tape-main">DATA_SPEED // 60,000X</span>
+                            <span class="tape-sub">VISUAL_VS_TEXT_PROCESSING</span>
+                        </div>
+
+                        <!-- Bottom row: remaining labels -->
+                        <div class="neural-tape-item">
+                            <span class="tape-main">RECOGNITION // 13MS</span>
+                            <span class="tape-sub">MINIMUM_PERCEPTION_TIME</span>
+                        </div>
+                        <div class="neural-tape-item">
+                            <span class="tape-main">REACTION // 150MS</span>
+                            <span class="tape-sub">HUMAN_RESPONSE_TIME</span>
+                        </div>
+                        <div class="neural-tape-item">
+                            <span class="tape-main">RETENTION_RATE // 95%</span>
+                            <span class="tape-sub">VISUAL_MEMORY_EFFICIENCY</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Desktop only: eye diagram on the right -->
+            <div id="scene-02-eye" class="hidden md:flex">
+                <!-- Inline Eye1.svg (trimmed metadata, controlled via GSAP) -->
+                <svg
+                    id="scene-02-eye-svg"
+                    viewBox="0 0 248.10565 217.28723"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <g id="layer1" transform="translate(16.437736)">
+                        <!-- Visible on load -->
+                        <path
+                            id="Lens"
+                            d="m 106.36546,127.99369 c 6.1285,-0.12727 18.74099,1.21029 18.7906,4.53138 0.0491,3.32108 -7.89857,11.15977 -17.81009,11.04627 -8.995418,-0.103 -18.657878,-7.39586 -18.666578,-10.58041 -0.009,-3.6526 11.317831,-4.90598 17.686068,-4.99724 z"
+                            style="fill:#1a1a3a;fill-opacity:1;stroke:#ffffff;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
+                        />
+                        <path
+                            id="EyeDiagram"
+                            d="m 127.62771,132.85949 -2.8148,1.12409 3.50157,-0.28527 m -0.0141,-3.17586 -6.10605,-0.50205 5.13916,1.7999 m -40.915308,1.03919 2.49782,1.16485 -3.18459,-0.32603 m 0.006,-3.13698 6.20832,-0.51089 -5.23293,1.76986 m -7.2643,-0.83621 c 1.66024,-2.56061 14.298183,-15.33912 27.323408,-15.2712 13.02517,0.0679 28.59671,13.70839 29.51731,16.07203 m -53.839348,-1.41814 c 1.66023,-2.56061 11.296813,-12.61308 24.322038,-12.54516 13.02517,0.0679 24.54704,12.05027 25.58088,12.66835 m -62.872888,56.44486 c -21.18474,-26.76371 1.43064,-52.44585 9.49544,-55.77888 2.09178,-0.8645 7.54533,-1.5849 7.76947,0.43225 0.22407,2.01714 -3.19103,4.17837 -6.04056,3.32348 -6.52963,-1.959 -28.1181,25.32255 -7.3105,50.66878 0,0 8.02529,8.24257 20.316133,12.82063 0.55089,0.20519 0.25655,2.80918 0.82418,2.99857 0.60713,0.20255 2.07743,-2.01072 2.70296,-1.82877 19.035775,5.53698 35.113305,-3.97753 43.333175,-13.99043 20.80752,-25.34625 -0.78087,-52.62778 -7.31049,-50.66878 -2.84954,0.85489 -6.26464,-1.30634 -6.04057,-3.32348 0.22414,-2.01715 5.67769,-1.29675 7.76947,-0.43225 7.00148,2.89359 29.77506,25.43031 9.49544,55.77888 -13.11874,19.63224 -36.47144,20.25021 -42.9029,19.22108 -0.70377,-0.11262 -1.907747,7.58876 -2.618224,7.43842 -0.811744,-0.17179 -1.732341,-0.39861 -2.723341,-0.66863 -0.17433,-0.0475 2.406434,-8.92128 2.043097,-9.04753 -0.428227,-0.14878 -2.973797,8.78747 -3.177877,8.72838 -1.29131,-0.37391 -2.669287,-0.80786 -4.059823,-1.27911 -0.45206,-0.1532 3.063713,-8.48195 2.612503,-8.64489 -0.41288,-0.14909 -4.499793,7.98521 -4.763513,7.88922 -1.1403,-0.41504 -2.26326,-0.84745 -3.32724,-1.2845 -0.31904,-0.13104 3.01191,-8.47812 2.70788,-8.5721 -0.50394,-0.15579 -4.60188,7.76281 -5.0505,7.55626 -0.65322,-0.30076 -1.26335,-0.59905 -1.81676,-0.89072 -0.47717,-0.25151 3.95257,-7.42549 3.48198,-7.6898 -6.04674,-3.39622 -11.50879,-7.82822 -15.40943,-12.75608 z"
+                            style="fill:none;stroke:#ffffff;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
+                        />
+
+                        <!-- Peripheral phase (hidden initially; animated via GSAP) -->
+                        <g id="Peripheral" transform="translate(-355.64869,-31.51963)" style="opacity:0">
+                            <path
+                                id="PeripheralReceptors"
+                                d="m 422.02523,204.74608 c 2.86631,11.35466 15.61794,20.92588 27.58889,25.24533 0.51582,0.18613 0.12027,2.68645 0.63237,2.8528 0.47445,0.15414 1.85695,-2.02429 2.32681,-1.88759 2.70429,0.78675 5.32059,1.28094 7.71946,1.4405 16.75692,1.33412 33.57648,-6.34857 42.66236,-26.7854 0.78758,-1.74693 -1.4072,-0.14184 -1.9737,-0.2632 -14.9561,39.23512 -67.16418,29.36176 -78.00061,-0.91772 -0.83603,-0.54098 -1.25338,-0.57427 -0.95558,0.31528 z"
+                                style="fill:#d4ff00;fill-opacity:0.84;stroke:#ffffff;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
+                            />
+                            <path
+                                id="PeripheralData"
+                                d="m 522.10864,69.192296 c 0,0 -5.9534,24.96362 -15.9013,36.671124 -17.4427,18.56969 -27.4503,34.72081 -33.4473,59.80399 -0.5742,4.52316 -7.9663,14.41572 -9.1265,22.05849 -0.1481,6.2527 -0.6516,12.55418 0,18.79677 1.1602,7.64277 7.0268,19.3598 7.601,23.88296 m 74.4717,-145.174014 c 0,0 -11.7758,22.802514 -24.2448,31.777514 -12.0466,8.67102 -34.7246,19.71393 -48.0844,48.70347 -1.033,5.93553 -7.5503,13.87389 -8.7859,22.01372 -0.1368,6.25222 -0.6512,12.55439 0,18.79635 1.1601,7.64277 18.7131,14.53113 19.2873,19.05429 m 9.4855,-7.90159 c -0.5742,-4.52316 -26.6551,-3.50993 -27.8152,-11.1527 -0.5587,-6.25189 -0.2103,-12.53682 0,-18.79677 1.2256,-8.07427 7.5578,-16.49017 8.449,-21.99523 19.6963,-25.11839 45.803,-29.48341 59.5271,-35.13646 14.2052,-5.8512 30.9309,-25.31594 30.9309,-25.31594 m 11.3598,17.20706 c 0,0 -19.8892,16.2186 -34.9023,19.47942 -14.5046,3.1504 -42.5068,2.70069 -66.315,23.96213 -0.8222,9.29381 -8.3921,13.36292 -8.4758,24.48291 l 0.2159,13.78692 c 0.078,10.31555 31.4368,-3.30237 34.5434,1.47718 M 403.58444,69.192296 c 0,0 5.9533,24.96362 15.9012,36.671124 17.4427,18.56969 27.4503,34.72081 33.4473,59.80399 0.5742,4.52316 7.9663,14.41572 9.1265,22.05849 0.1482,6.2527 0.6516,12.55418 0,18.79677 -1.1602,7.64277 -6.8733,18.66184 -7.4476,23.185 M 379.98674,85.231616 c 0,0 11.7758,22.802514 24.2448,31.777514 12.0466,8.67102 34.7246,19.71393 48.0845,48.70347 1.033,5.93553 7.5502,13.87389 8.7858,22.01372 0.1368,6.25222 0.6513,12.55439 0,18.79635 -1.1601,7.64277 -18.4308,14.00657 -19.005,18.52973 m -11.0272,-7.94365 c 0.5743,-4.52316 27.9145,-2.94331 29.0747,-10.58608 0.5587,-6.25189 0.2103,-12.53682 0,-18.79677 -1.2257,-8.07427 -7.5579,-16.49017 -8.4491,-21.99523 -19.6963,-25.11839 -45.8029,-29.48341 -59.527,-35.13646 -14.2053,-5.8512 -30.931,-25.31594 -30.931,-25.31594 m -11.3598,17.20706 c 0,0 19.8892,16.2186 34.9023,19.47942 14.5046,3.1504 42.5069,2.70069 66.315,23.96213 0.8222,9.29381 8.3921,13.36292 8.4759,24.48291 l -0.2159,13.78692 c -0.078,10.31555 -32.7766,-3.6822 -35.8832,1.09735"
+                                style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                            />
+                        </g>
+
+                        <!-- Focus phase (hidden initially; animated via GSAP) -->
+                        <g id="Focus" transform="translate(-217.64027,-44.003514)" style="opacity:0">
+                            <g id="FocusData">
+                                <path
+                                    d="m 319.54166,47.972536 0.099,124.073004 -6.4779,12.2342 9.7557,59.02531"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 321.12926,47.972546 -0.2557,124.006534 -6.0658,13.16316 8.7072,58.16836"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:1.5875, 1.5875;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 322.49526,47.972546 -0.2557,124.006534 -5.9058,13.77257 7.7745,57.56918"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 323.94226,47.972556 -0.2557,124.006534 -5.8897,14.27153 6.983,57.17146"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:3.175, 3.175;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 329.69816,47.972526 -0.099,124.073004 6.4357,11.83648 -9.7135,59.42303"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 328.11056,47.972536 0.2557,124.006534 6.2084,12.79075 -8.8498,58.54077"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:1.05833, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 326.74456,47.972536 0.2557,124.006534 5.9661,13.55021 -7.8348,57.79154"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 1.05833;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 325.29756,47.972546 0.2557,124.006534 5.9299,14.18475 -7.0232,57.25824"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:1.5875, 1.5875;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 324.75536,173.222 5.1284,13.45313 c 0,0 -3.1433,33.59429 -5.2601,49.821 l -5.4416,-49.65729 z"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 324.72886,176.61402 3.6369,10.45593 c 0,0 -1.7953,27.61426 -3.728,42.39329 l -3.8053,-42.31831 z"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 324.71126,180.07989 2.2564,7.29682 c 0,0 -0.9086,21.13209 -2.2477,32.72927 l -2.4297,-32.76806 z"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                                <path
+                                    d="m 324.71526,184.02816 0.9307,3.43171 c 0,0 0.4131,8.76303 -0.926,20.36021 l -0.899,-20.37731 z"
+                                    style="fill:none;stroke:#d4ff00;stroke-width:0.264583;stroke-dasharray:2.11667, 2.11667;stroke-dashoffset:0;stroke-opacity:1"
+                                />
+                            </g>
+                            <path
+                                id="FocusReceptors"
+                                d="m 319.91748,244.6113 c 3.30048,0.52785 5.55815,0.51647 8.91308,0.25388 -0.0531,-0.53276 -0.0679,-1.06172 -0.28417,-1.55991 -3.07003,0.22527 -5.13604,0.23504 -8.15625,-0.2178 -0.29341,0.38803 -0.4957,1.14866 -0.47266,1.52383 z"
+                                style="fill:#d4ff00;fill-opacity:1;stroke:#ffffff;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
+                            />
+                        </g>
+
+                    </g>
+                </svg>
             </div>
             </div>
         </section>
@@ -1285,7 +1475,7 @@
             measure();
         })();
 
-        // ===== SCENE 02: Evolution + copy (19%) | Neural Tape desktop 22% / mobile 23% sliding boxes =====
+        // ===== SCENE 02: Evolution + copy (19%) | Neural Tape + Eye desktop 22% / mobile 23% sliding boxes =====
         (function() {
             const scene = document.getElementById('scene-02');
             if (!scene || typeof gsap === 'undefined') return;
@@ -1294,6 +1484,14 @@
             const copy = document.getElementById('scene-02-copy');
             const tapeItems = scene.querySelectorAll('.neural-tape-item');
             const tapeMobileBoxes = scene.querySelectorAll('.neural-tape-mobile-box');
+            const tapeDesktopTitle = scene.querySelector('.neural-tape-desktop-title');
+            // Eye elements (desktop only)
+            const peripheralGroup = scene.querySelector('#Peripheral');
+            const focusGroup = scene.querySelector('#Focus');
+            const peripheralData = scene.querySelector('#PeripheralData');
+            const focusDataGroup = scene.querySelector('#FocusData');
+            const peripheralReceptors = scene.querySelector('#PeripheralReceptors');
+            const focusReceptors = scene.querySelector('#FocusReceptors');
             const isMobile = window.innerWidth < 768;
             if (!words.length || !copy) return;
 
@@ -1302,11 +1500,74 @@
             // Initial state: words slightly below and invisible
             gsap.set(words, { y: 16, opacity: 0 });
 
-            // Desktop: tape items slide from bottom
+            // Desktop: title hidden until boxes start; tape items + eye layers initial state
+            let peripheralFlowTl = null;
+            let focusFlowTl = null;
+            let peripheralPulseTl = null;
+            let focusPulseTl = null;
+
             if (!isMobile) {
+                if (tapeDesktopTitle) gsap.set(tapeDesktopTitle, { y: 24, opacity: 0 });
                 tapeItems.forEach(function(el) {
                     gsap.set(el, { y: 60, opacity: 0 });
                 });
+
+                // Eye groups hidden initially
+                if (peripheralGroup) gsap.set(peripheralGroup, { autoAlpha: 0 });
+                if (focusGroup) gsap.set(focusGroup, { autoAlpha: 0 });
+
+                // Peripheral data: keep dashed pattern from SVG and scroll offset continuously
+                if (peripheralData) {
+                    peripheralFlowTl = gsap.timeline({ repeat: -1, paused: true });
+                    peripheralFlowTl.to(peripheralData, {
+                        strokeDashoffset: "-=80",
+                        duration: 2.5,
+                        ease: "none"
+                    });
+                }
+
+                // Focus data flowing loop (subtle, continuous drift; started once and never paused)
+                if (focusDataGroup) {
+                    const focusPaths = focusDataGroup.querySelectorAll('path');
+                    if (focusPaths.length) {
+                        focusFlowTl = gsap.timeline({
+                            repeat: -1,
+                            paused: true,
+                            defaults: { ease: "none" }
+                        });
+                        focusFlowTl.to(focusPaths, {
+                            strokeDashoffset: "-=48",
+                            duration: 2.4,
+                            stagger: 0.06
+                        });
+                    }
+                }
+
+                // Receptor pulses: glow only (no scale change)
+                if (peripheralReceptors) {
+                    peripheralPulseTl = gsap.timeline({ repeat: -1, yoyo: true, paused: true });
+                    peripheralPulseTl.fromTo(
+                        peripheralReceptors,
+                        { filter: "drop-shadow(0 0 0 rgba(204,255,0,0))" },
+                        {
+                            filter: "drop-shadow(0 0 10px rgba(204,255,0,1))",
+                            duration: 0.8,
+                            ease: "sine.inOut"
+                        }
+                    );
+                }
+                if (focusReceptors) {
+                    focusPulseTl = gsap.timeline({ repeat: -1, yoyo: true, paused: true });
+                    focusPulseTl.fromTo(
+                        focusReceptors,
+                        { filter: "drop-shadow(0 0 0 rgba(204,255,0,0))" },
+                        {
+                            filter: "drop-shadow(0 0 12px rgba(204,255,0,1))",
+                            duration: 0.8,
+                            ease: "sine.inOut"
+                        }
+                    );
+                }
             }
 
             // Mobile: sliding boxes start off-screen right (CSS already sets translateX(120%))
@@ -1327,7 +1588,7 @@
             });
             evolutionTl.to(copy, { opacity: 1, duration: 0.8 }, '+=0.1');
 
-            // Neural Latency Tape timeline — desktop: stagger in; mobile: sliding boxes at 23%, then auto-run sequence
+            // Neural Latency Tape + Eye timeline — desktop: stagger in; mobile: sliding boxes at 23%, then auto-run sequence
             const tapeTl = gsap.timeline({
                 paused: true,
                 defaults: { ease: 'power2.out' }
@@ -1340,12 +1601,42 @@
                     stagger: 0.25
                 });
             } else if (tapeItems.length) {
+                if (tapeDesktopTitle) {
+                    tapeTl.to(tapeDesktopTitle, { y: 0, opacity: 1, duration: 0.4 }, 0);
+                }
                 tapeTl.to(tapeItems, {
                     y: 0,
                     opacity: 1,
                     duration: 0.5,
                     stagger: 0.15
-                });
+                }, 0);
+
+                // Eye: peripheral phase starts shortly after boxes begin
+                if (!isMobile && peripheralGroup) {
+                    tapeTl.add(() => {
+                        gsap.to(peripheralGroup, { autoAlpha: 1, duration: 0.4 });
+                        if (peripheralFlowTl) peripheralFlowTl.play();
+                        if (peripheralPulseTl) peripheralPulseTl.play();
+                    }, 0.1);
+                }
+
+                // Eye: transition from peripheral → focus later in the same scroll band
+                if (!isMobile && peripheralGroup && focusGroup) {
+                    // Stop peripheral loops, fade out, fade focus in
+                    tapeTl.add(() => {
+                        if (peripheralFlowTl) peripheralFlowTl.pause();
+                        if (peripheralPulseTl) peripheralPulseTl.pause();
+                    }, 4.2);
+
+                    tapeTl.to(peripheralGroup, { autoAlpha: 0, duration: 0.6 }, 4.2);
+                    tapeTl.to(focusGroup, { autoAlpha: 1, duration: 0.6 }, 4.2);
+
+                    // Start focus loops slightly after fade
+                    tapeTl.add(() => {
+                        if (focusFlowTl) focusFlowTl.play();
+                        if (focusPulseTl) focusPulseTl.play();
+                    }, 5.0);
+                }
             }
 
             window.__scene02Tl = evolutionTl;
